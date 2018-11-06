@@ -1,0 +1,129 @@
+import time
+
+from flask import session
+from authlib.flask.oauth2 import AuthorizationServer, ResourceProtector
+from authlib.flask.oauth2.sqla import (
+    create_query_client_func,
+    create_save_token_func,
+    create_revocation_endpoint,
+    create_bearer_token_validator,
+)
+from authlib.specs.rfc6749 import grants, TokenMixin
+from authlib.specs.rfc6750 import BearerTokenValidator
+from authlib.specs.rfc7519 import jwk
+from authlib.specs.rfc7523 import JWTBearerGrant
+from werkzeug.security import gen_salt
+from project.app.models.user import User
+from project.app.services import userService
+from project.app.services.utils import userUtils
+from project.app.web.utils import authUtils, dtoUtils
+
+
+class _OAuth2TokenMixin(TokenMixin):
+    scope = None
+    expires_in = None
+    expires_at = None
+    def get_scope(self):
+        """A method to get scope of the authorization code. For instance,
+        the column is called ``scope``::
+
+            def get_scope(self):
+                return self.scope
+
+        :return: scope string
+        """
+        return self.scope
+
+    def get_expires_in(self):
+        """A method to get the ``expires_in`` value of the token. e.g.
+        the column is called ``expires_in``::
+
+            def get_expires_in(self):
+                return self.expires_in
+
+        :return: timestamp int
+        """
+        return self.expires_in
+
+    def get_expires_at(self):
+        """A method to get the value when this token will be expired. e.g.
+        it would be::
+
+            def get_expires_at(self):
+                return self.created_at + self.expires_in
+
+        :return: timestamp int
+        """
+        return self.expires_at
+
+
+class _BearerTokenValidator(BearerTokenValidator):
+    def authenticate_token(self, tokenString):  
+        print("_BearerTokenValidator->authenticate_token called..." + tokenString)
+        # oAuth2Token = OAuth2Token()
+        # return oAuth2Token
+        payload = authUtils.decodeAuthTokenPayload(tokenString)
+        print("_BearerTokenValidator->payload:" + str(payload))
+
+            # 'exp': datetime.utcnow() + timedelta(days=1, seconds=0),
+            # 'iat': datetime.utcnow(),
+            # 'sub': user.id,
+            # 'jti': str(jtiUuid),
+            # 'auth': authorityList
+
+        token = _OAuth2TokenMixin()
+        token.scope = payload['auth']
+        token.expires_in = payload['exp'] - payload['iat']
+        token.expires_at = payload['exp']
+
+        # dbToken = oauth2Service.queryToken(payload['jti'], 'access_token')
+        # print("dbToken:" + str(dbToken))
+
+        #    'exp': datetime.utcnow() + timedelta(days=1, seconds=0),
+        #     'iat': datetime.utcnow(),
+        #     'sub': user.id,
+        #     'jti': str(jtiUuid),
+        #     'auth': authorityList
+
+        # item = OAuth2Token()
+        # item.client_id=clientId
+        # item.user_id=userId
+        # item.token_type = tokenType
+        # item.scope = scope
+        # item.access_token = jti
+        # item.revoked = False
+        # item.issued_at = issuedAt
+        # item.expires_in = expiresIn
+
+        return token
+
+    def request_invalid(self, request):
+        print("request_invalid->request:" + str(request))
+        return False
+
+    def token_revoked(self, token):
+        print("token_revoked:" + str(token))
+        return False
+
+
+# ------------------------------------------------------------------------------
+# Set up the Oauth Server
+# ------------------------------------------------------------------------------
+print("Creating AuthorizationServer...")
+authorizationServer = AuthorizationServer()
+
+# scopes definition
+scopes = {
+    'public': 'Public Access',
+    'admin': 'Admin Access'
+}
+
+# protect resource
+require_oauth = ResourceProtector()
+require_oauth.register_token_validator(_BearerTokenValidator())
+
+def init(app):
+
+    print("initializing up AuthorizationServer...")
+    authorizationServer.init_jwt_config(app)
+    authorizationServer.init_app(app)
