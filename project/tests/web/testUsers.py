@@ -1,4 +1,3 @@
-import pytest
 import unittest
 import json
 from project.tests.web.baseTest import BaseTest 

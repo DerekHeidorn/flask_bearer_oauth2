@@ -5,11 +5,9 @@ from flask_cors import CORS
 from project.app.services import commonService
 from project.app.web import oauth2
 from project.app.web.api import userApi, codetablesApi, commonApi
-from authlib.specs.rfc7518.jwk_algorithms import JWK_ALGORITHMS
+
 
 def createApplication():
-
-    
 
     print("Creating Application...")
     app = Flask(__name__)

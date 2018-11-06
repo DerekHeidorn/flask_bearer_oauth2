@@ -1,14 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-
-import datetime
-
-
 
 from project.app.models.user import User
 from project.app.persist.baseDao import getSession
-
 
 
 def addUser(newUser, session=None):
@@ -28,6 +20,7 @@ def addUser(newUser, session=None):
 
     return newUser.id
 
+
 def getUsers(session=None):
     """
     Get all users, order by Last Name
@@ -41,6 +34,7 @@ def getUsers(session=None):
 
     return all_users
 
+
 def getUser(id, session=None):
     """
     Gets the User based on the id parameter
@@ -53,6 +47,7 @@ def getUser(id, session=None):
 
     user = session.query(User).filter(User.id == id).first()
     return user 
+
 
 def getUserByUsername(username, session=None):
     """

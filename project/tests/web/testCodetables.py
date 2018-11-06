@@ -1,9 +1,9 @@
-import pytest
+
 import unittest
 import json
 from project.tests.web.baseTest import BaseTest 
 
-# @pytest.fixture(scope="class", autouse=True)
+
 class CodetableTestCases(BaseTest):
 
     def test_CtUserStatuses_OK(self):

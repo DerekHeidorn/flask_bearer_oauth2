@@ -1,10 +1,9 @@
-import json
+
 from flask import Blueprint
 from flask import jsonify
 from flask import abort
 from werkzeug.contrib.cache import SimpleCache
 
-from project.app.models.user import User
 from project.app.models.codetables.users import CtUserStatuses, CtUserTypes
 from project.app.services import codetablesService
 from project.app.web.utils import dtoUtils
@@ -15,7 +14,6 @@ allowableCodetableMap = {"CtUserStatuses" : CtUserStatuses, "CtUserTypes" : CtUs
 codetableCache = SimpleCache()
 
 @api.route('/api/v1.0/admin/codetables/<codetableName>', methods=['GET'])
-#@oauth.require_oauth('email')
 def codetableByName(codetableName):
 
     allowedCodetable = allowableCodetableMap.get(codetableName)

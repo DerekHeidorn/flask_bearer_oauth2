@@ -1,17 +1,13 @@
 import json
 
-from sqlalchemy import Column, String, Integer, ForeignKey, Numeric, Date, DateTime, Table
-from sqlalchemy.orm import relationship, base
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, Integer, ForeignKey, Table
+from sqlalchemy.orm import relationship
 from project.app.models.baseModel import BaseModel
-
-
 
 securityGroupAuthAssociation = Table('TB_SCRTY_GRP_AUTH', BaseModel.metadata,
     Column('SCRGRP_ID', Integer, ForeignKey('TB_SCRTY_GRP.SCRGRP_ID')),
     Column('SCRAUTH_ID', Integer, ForeignKey('TB_SCRTY_AUTH.SCRAUTH_ID'))
 )
-
 
 
 class SecurityAuthority(BaseModel):
@@ -35,7 +31,6 @@ class SecurityAuthority(BaseModel):
 
     def serialize(self):
         return json.dumps({"id": self.id, "key": self.key}) 
-
 
 
 class SecurityGroup(BaseModel):

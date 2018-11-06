@@ -1,8 +1,5 @@
-import json
 
-from sqlalchemy import Column, String, Integer, ForeignKey, Numeric, Date, DateTime
-from sqlalchemy.orm import relationship, base
-
+from sqlalchemy import Column, String, Integer
 from project.app.models.baseModel import BaseModel
 
 

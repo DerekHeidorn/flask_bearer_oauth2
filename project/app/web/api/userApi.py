@@ -1,30 +1,18 @@
-import hashlib
-import json
-#from oauthlib import 
 
-from flask import Flask
 from flask import jsonify
 from flask import abort
 from flask import make_response
 from flask import request
 from flask import url_for
 from flask import Blueprint
-from datetime import datetime, timedelta
 
-import jwt
-
-from math import ceil
-
-from project.app.models.user import User
-from project.app.services import userService, commonService
-from project.app.services.utils import userUtils
+from project.app.services import userService
 from project.app.web.utils import dtoUtils
 from project.app.web import oauth2
 
-#  authorities = userUtils.getUserAuthorities(user)
-# class UserService(BaseService):
 
 api = Blueprint('user_api', __name__)
+
 
 def getErrorCode(error):
     if "parameter" in error.message.lower():
@@ -46,6 +34,7 @@ def getUserById(id):
         #
         abort(404)
 
+
 @api.route('/api/v1.0/admin/user/<id>', methods=['DELETE'])
 @oauth2.require_oauth('STAFF_ACCESS')
 def deleteUser(id):
@@ -61,7 +50,6 @@ def deleteUser(id):
         return tmp_response
 
 
-
 @api.route('/api/v1.0/admin/user/<id>', methods=['PUT'])
 @oauth2.require_oauth('STAFF_ACCESS')
 def updatePublicUser(id):
@@ -75,6 +63,7 @@ def updatePublicUser(id):
         return make_response('', 404)
     else:
         return jsonify(dtoUtils.userSerialize(updated_user))
+
 
 @api.route('/api/v1.0/admin/user', methods=['POST'])
 @oauth2.require_oauth('STAFF_ACCESS')

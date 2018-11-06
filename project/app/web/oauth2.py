@@ -1,28 +1,17 @@
-import time
 
-from flask import session
 from authlib.flask.oauth2 import AuthorizationServer, ResourceProtector
-from authlib.flask.oauth2.sqla import (
-    create_query_client_func,
-    create_save_token_func,
-    create_revocation_endpoint,
-    create_bearer_token_validator,
-)
-from authlib.specs.rfc6749 import grants, TokenMixin
+
+from authlib.specs.rfc6749 import TokenMixin
 from authlib.specs.rfc6750 import BearerTokenValidator
-from authlib.specs.rfc7519 import jwk
-from authlib.specs.rfc7523 import JWTBearerGrant
-from werkzeug.security import gen_salt
-from project.app.models.user import User
-from project.app.services import userService
-from project.app.services.utils import userUtils
-from project.app.web.utils import authUtils, dtoUtils
+from project.app.web.utils import authUtils
 
 
 class _OAuth2TokenMixin(TokenMixin):
+
     scope = None
     expires_in = None
     expires_at = None
+
     def get_scope(self):
         """A method to get scope of the authorization code. For instance,
         the column is called ``scope``::

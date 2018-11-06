@@ -1,8 +1,7 @@
 
 import unittest
-import sys
-
 from project.app import main
+
 
 class BaseTest(unittest.TestCase):
 
@@ -12,7 +11,6 @@ class BaseTest(unittest.TestCase):
         print("setting up Test Client...")
         self.app.config['TESTING'] = True
         self.testClient = self.app.test_client()
-
 
     def tearDown(self):
         pass
