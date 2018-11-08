@@ -1,50 +1,63 @@
-
 from project.app.models.user import User
-from project.app.persist import userDao
+from project.app.persist import baseDao, userDao, securityDao
 from project.app.services.utils import userUtils
 
 
-def buildMessage(key, message):
-    return {key:message}    
+def is_user_valid(username, password):
+    user = userDao.get_user_by_username(username)
+    if user is not None:
+        return userUtils.is_user_valid(user, password)
+    else:
+        return False
 
 
-def deleteUser(id):
-    return userDao.deleteUser(id)
+def delete_user(user_id):
+    return userDao.delete_user(user_id)
 
 
-def updateUser(id, userToBeUpdated):
-    return userDao.updateUser(id, userToBeUpdated)
+def update_user(user_id, user_to_be_updated):
+    return userDao.update_user(user_id, user_to_be_updated)
 
 
-def getUserById(id):
-    return userDao.getUser(id)
+def get_user_by_id(user_id):
+    return userDao.get_user(user_id)
 
 
-def getUserByUsername(username):
-    return userDao.getUserByUsername(username)
+def get_user_by_username(username):
+    return userDao.get_user_by_username(username)
 
 
-def addUser(username, password, firstName=None, lastName=None):
+def is_username_unique(username):
+    return userDao.is_username_unique(username)
 
-    userUtils.randomUserPrivateKey(32)
 
-    newUser = User(firstName=firstName, lastName=lastName, username=username)
-    newUser.statusCd = 'A'
-    newUser.typeCd = '1'
-    newUser.failedAttemptCnt = 0
-    newUser.privateKey = userUtils.randomUserPrivateKey(32)
-    newUser.passwordSalt = userUtils.randomUserPrivateKey(32) 
-    newUser.passwordHash = userUtils.getHashedPassword(password, newUser.passwordSalt)
-    userId = userDao.addUser(newUser)
-    if userId:
-        return userDao.getUser(userId)
+def get_user_by_username_and_validate(username, password):
+    user = userDao.get_user_by_username(username)
+    if user is not None:
+        return {"user": user, "is_password_valid": userUtils.is_user_valid(user, password)}
+    else:
+        return {"user": None, "is_password_valid": False}
+
+
+def add_public_user(client_id, username, password, first_name=None, last_name=None):
+
+    userUtils.random_user_private_key(32)
+
+    session = baseDao.get_session()
+    security_group = securityDao.get_security_group_by_name(securityDao.SECURITY_GROUP_CUSTOMER_NAME,
+                                                            session=session)
+
+    new_user = User(first_name=first_name, last_name=last_name, username=username)
+    new_user.status_cd = 'A'
+    new_user.type_cd = '1'
+    new_user.failed_attempt_count = 0
+    new_user.private_key = userUtils.random_user_private_key(32)
+    new_user.password_salt = userUtils.random_user_private_key(32)
+    new_user.password_hash = userUtils.get_hashed_password(password, new_user.password_salt)
+
+    new_user.security_groups.append(security_group)
+    user_id = userDao.add_user(new_user, session=session)
+    if user_id:
+        return userDao.get_user(user_id)
     else:
         return None
-
-
-
-
- 
-
-
-

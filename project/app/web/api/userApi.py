@@ -10,21 +10,13 @@ from project.app.services import userService
 from project.app.web.utils import dtoUtils
 from project.app.web import oauth2
 
-
 api = Blueprint('user_api', __name__)
 
 
-def getErrorCode(error):
-    if "parameter" in error.message.lower():
-        return 9100
-
-    return 9000
-
-
-@api.route('/api/v1.0/admin/user/<id>', methods=['GET'])
+@api.route('/api/v1.0/admin/user/<user_id>', methods=['GET'])
 @oauth2.require_oauth('STAFF_ACCESS')
-def getUserById(id):
-    current_user = userService.getUserById(id)
+def get_user_by_id(user_id):
+    current_user = userService.get_user_by_id(user_id)
     if current_user:
         return jsonify(dtoUtils.userSerialize(current_user))
     else:
@@ -35,30 +27,28 @@ def getUserById(id):
         abort(404)
 
 
-@api.route('/api/v1.0/admin/user/<id>', methods=['DELETE'])
+@api.route('/api/v1.0/admin/user/<user_id>', methods=['DELETE'])
 @oauth2.require_oauth('STAFF_ACCESS')
-def deleteUser(id):
+def delete_user(user_id):
     try:
-        if userService.deleteUser(id):
+        if userService.delete_user(user_id):
             return make_response("", 200)
         else:
             return make_response("", 404)
-    except ValueError as err:
+    except ValueError:
         tmp_response = make_response("", 500)
-        tmp_response.headers["X-APP-ERROR-CODE"] = getErrorCode(err)
-        tmp_response.headers["X-APP-ERROR-MESSAGE"] = err
         return tmp_response
 
 
-@api.route('/api/v1.0/admin/user/<id>', methods=['PUT'])
+@api.route('/api/v1.0/admin/user/<user_id>', methods=['PUT'])
 @oauth2.require_oauth('STAFF_ACCESS')
-def updatePublicUser(id):
+def update_public_user(user_id):
     user_to_be_updated = {
-        "firstName":request.form["firstName"],
-        "lastName":request.form["lastName"],
-        "username":request.form["username"]
+        "first_name": request.form["first_name"],
+        "last_name": request.form["last_name"],
+        "username": request.form["username"]
     }
-    updated_user = userService.updateUser(id, user_to_be_updated)
+    updated_user = userService.update_user(user_id, user_to_be_updated)
     if not updated_user:
         return make_response('', 404)
     else:
@@ -67,22 +57,15 @@ def updatePublicUser(id):
 
 @api.route('/api/v1.0/admin/user', methods=['POST'])
 @oauth2.require_oauth('STAFF_ACCESS')
-def addPublicUser():
-    firstName = request.form["firstName"]
-    lastName = request.form["lastName"]
+def add_public_user():
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
     username = request.form["username"]
     password = request.form["password"]
 
-    newUser = userService.addUser(username, password, firstName, lastName)
+    new_user = userService.add_public_user(None, username, password, first_name, last_name)
 
     return jsonify({
-        "id": newUser.id,
-        "url": url_for("user_api.getUserById", id=newUser.id)
+        "id": new_user.id,
+        "url": url_for("user_api.getUserById", id=new_user.id)
     }), 201
-    
-
-
- 
-
-
-

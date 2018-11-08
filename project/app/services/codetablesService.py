@@ -2,8 +2,8 @@
 from project.app.persist import codetableDao
 
 
-def getCodeTable(codetableName):
+def get_code_table(code_table_name):
 
-    codetableData = codetableDao.getCodeTable(codetableName)
+    data = codetableDao.get_code_table(code_table_name)
 
-    return codetableData
+    return data

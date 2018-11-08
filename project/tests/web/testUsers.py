@@ -7,54 +7,55 @@ from project.tests.helpers import commonHelper
 
 class UserServiceTestCase(BaseTest):
 
-    def createUser(self, staffInfo):
+    def createUser(self, staff_info):
         
-        resp = self.testClient.post('/api/v1.0/admin/user'
-        , headers={"Authorization":"bearer " + staffInfo['token']}
-        ,data = dict(
-            firstName = "Tester",
-            lastName = "Auto",
-            username = randomUtil.randomUsername(),
-            password = randomUtil.randomString(10, 25)
-        ))
-        self.debugResponse(resp)
+        resp = self.testClient.post('/api/v1.0/admin/user',
+                                    headers={"Authorization": "bearer " + staff_info['token']},
+                                    data=dict(
+                                                first_name="Tester",
+                                                last_name="Auto",
+                                                username=randomUtil.random_username(),
+                                                password=randomUtil.random_string(10, 25)
+                                             )
+                                    )
+        self.debug_response(resp)
         self.assertEquals(201, resp.status_code)
-        responseData = json.loads(resp.data)
+        response_data = json.loads(resp.data)
 
-        return responseData["id"]
+        return response_data["id"]
 
     def testUserCreate(self):
         print("Running: testUserCreate")
-        staffInfo = commonHelper.getDefaultStaff()
-        resp = self.testClient.post('/api/v1.0/admin/user'
-        , headers={"Authorization":"bearer " + staffInfo['token']}
-        ,data = dict(
-            firstName = "Tester",
-            lastName = "Auto",
-            username = randomUtil.randomUsername(),
-            password = randomUtil.randomString(10, 25)
-        ))
-        self.debugResponse(resp)
+        staff_info = commonHelper.get_default_staff()
+        resp = self.testClient.post('/api/v1.0/admin/user',
+                                    headers={"Authorization": "bearer " + staff_info['token']},
+                                    data=dict(
+                                                firstName="Tester",
+                                                lastName="Auto",
+                                                username=randomUtil.random_username(),
+                                                password=randomUtil.random_string(10, 25)
+                                             )
+                                    )
+        self.debug_response(resp)
 
         self.assertEquals(201, resp.status_code)
-        responseData = json.loads(resp.data)
-        assert responseData["id"] is not None
-        assert responseData["url"] is not None
+        response_data = json.loads(resp.data)
+        assert response_data["id"] is not None
+        assert response_data["url"] is not None
 
-        return responseData["id"]
+        return response_data["id"]
 
-    def testUserById_OK(self):
+    def test_user_by_id_ok(self):
         print("Running: testUserById_OK")
-        staffInfo = commonHelper.getDefaultStaff()
-        id = self.createUser(staffInfo)
-
+        staff_info = commonHelper.get_default_staff()
+        user_id = self.createUser(staff_info)
 
         print("\nRunning: test_user_by_id_OK")
-        resp = self.testClient.get('/api/v1.0/admin/user/' + str(id)
-        , headers={"Authorization":"bearer " + staffInfo['token']})
+        resp = self.testClient.get('/api/v1.0/admin/user/' + str(user_id),
+                                   headers={"Authorization": "bearer " + staff_info['token']})
         
-        self.debugResponse(resp)
-        self.assertEquals( 200, resp.status_code)
+        self.debug_response(resp)
+        self.assertEquals(200, resp.status_code)
         user = json.loads(resp.data)
 
         assert user is not None
@@ -62,44 +63,44 @@ class UserServiceTestCase(BaseTest):
         self.assertEquals(id, user["id"])
         self.assertEquals("Tester", user["firstName"])
 
-    def testUpdateUser(self):
-        print("Running: testUpdateUser")
-        staffInfo = commonHelper.getDefaultStaff()
-        id = self.createUser(staffInfo)
-        newFirstName = "UpdatedTester"
-        newLastName = "UpdatedAuto"
-        newUsername = "updated.auto@tester.com"
+    def test_update_user(self):
+        print("Running: test_update_user")
+        staff_info = commonHelper.get_default_staff()
+        user_id = self.createUser(staff_info)
+        new_first_name = "UpdatedTester"
+        new_last_name = "UpdatedAuto"
+        new_username = "updated.auto@tester.com"
 
         print("\nRunning: test_update_user")
-        resp = self.testClient.put('/api/v1.0/admin/user/' + str(id)
-        , headers={"Authorization":"bearer " + staffInfo['token']},
-        data = dict(
-            firstName = newFirstName,
-            lastName = newLastName,
-            username = newUsername
-        ))
-        self.debugResponse(resp)
+        resp = self.testClient.put('/api/v1.0/admin/user/' + str(user_id),
+                                   headers={"Authorization": "bearer " + staff_info['token']},
+                                   data=dict(
+                                               first_name=new_first_name,
+                                               last_name=new_last_name,
+                                               username=new_username
+                                            )
+                                   )
+        self.debug_response(resp)
         user = json.loads(resp.data)
 
         assert user is not None
         
         self.assertEquals(id,  user["id"])
-        self.assertEquals( newFirstName , user["firstName"])
-        self.assertEquals( newLastName , user["lastName"])
-        self.assertEquals( newUsername , user["username"])
+        self.assertEquals(new_first_name, user["first_name"])
+        self.assertEquals(new_last_name, user["last_name"])
+        self.assertEquals(new_username, user["username"])
 
+    def test_user_delete(self):
+        print("Running: test_user_delete")
+        staff_info = commonHelper.get_default_staff()
+        user_id = self.createUser(staff_info)
 
-    def testUserDelete(self):
-        print("Running: testUserDelete")
-        staffInfo = commonHelper.getDefaultStaff()
-        id = self.createUser(staffInfo)
-
-        resp = self.testClient.delete('/api/v1.0/admin/user/' + str(id)
-            , headers={"Authorization":"bearer " + staffInfo['token']}
-        )
+        resp = self.testClient.delete('/api/v1.0/admin/user/' + str(user_id),
+                                      headers={"Authorization": "bearer " + staff_info['token']}
+                                      )
         
         print("resp.data=" + str(resp.data))
-        self.assertEquals( 200, resp.status_code)
+        self.assertEquals(200, resp.status_code)
 
 
 if __name__ == '__main__':

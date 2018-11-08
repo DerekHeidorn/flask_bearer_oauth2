@@ -1,12 +1,12 @@
 
-from project.app.persist.baseDao import getSession
+from project.app.persist import baseDao
 from project.app.models.batch import BatchJob
 
 
-def getBatchJobById(id, session=None):
+def get_batch_job_by_id(batch_id, session=None):
 
-    if(session == None):
-        session = getSession()
+    if session is None:
+        session = baseDao.get_session()
 
-    configItem = session.query(BatchJob).filter(BatchJob.id == id).first()
-    return configItem
+    item = session.query(BatchJob).filter(BatchJob.id == batch_id).first()
+    return item

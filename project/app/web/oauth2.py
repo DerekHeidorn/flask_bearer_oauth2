@@ -47,42 +47,17 @@ class _OAuth2TokenMixin(TokenMixin):
 
 
 class _BearerTokenValidator(BearerTokenValidator):
-    def authenticate_token(self, tokenString):  
-        print("_BearerTokenValidator->authenticate_token called..." + tokenString)
+    def authenticate_token(self, token_string):
+        print("_BearerTokenValidator->authenticate_token called..." + token_string)
         # oAuth2Token = OAuth2Token()
         # return oAuth2Token
-        payload = authUtils.decodeAuthTokenPayload(tokenString)
+        payload = authUtils.decode_auth_token_payload(token_string)
         print("_BearerTokenValidator->payload:" + str(payload))
-
-            # 'exp': datetime.utcnow() + timedelta(days=1, seconds=0),
-            # 'iat': datetime.utcnow(),
-            # 'sub': user.id,
-            # 'jti': str(jtiUuid),
-            # 'auth': authorityList
 
         token = _OAuth2TokenMixin()
         token.scope = payload['auth']
         token.expires_in = payload['exp'] - payload['iat']
         token.expires_at = payload['exp']
-
-        # dbToken = oauth2Service.queryToken(payload['jti'], 'access_token')
-        # print("dbToken:" + str(dbToken))
-
-        #    'exp': datetime.utcnow() + timedelta(days=1, seconds=0),
-        #     'iat': datetime.utcnow(),
-        #     'sub': user.id,
-        #     'jti': str(jtiUuid),
-        #     'auth': authorityList
-
-        # item = OAuth2Token()
-        # item.client_id=clientId
-        # item.user_id=userId
-        # item.token_type = tokenType
-        # item.scope = scope
-        # item.access_token = jti
-        # item.revoked = False
-        # item.issued_at = issuedAt
-        # item.expires_in = expiresIn
 
         return token
 
@@ -110,6 +85,7 @@ scopes = {
 # protect resource
 require_oauth = ResourceProtector()
 require_oauth.register_token_validator(_BearerTokenValidator())
+
 
 def init(app):
 

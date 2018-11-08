@@ -2,21 +2,17 @@ import os
 import unittest
 import coverage
 
-from flask import Flask
-from flask_script import Server, Manager
+
+from flask_script import Manager
 from project.app import main
 
-# app = createApplication()
-# manager = Manager(app)
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTH_INSECURE_TRANSPORT'] = '1'
 os.environ['DEBUG'] = '1'
 
-app = main.createApplication()
+app = main.create_application()
 manager = Manager(app)
-
-#manager = Manager()
-# manager.add_command("runserver", Server(host="0.0.0.0", port=9000))
 
 COV = coverage.coverage(
     branch=True,
@@ -29,6 +25,7 @@ COV = coverage.coverage(
 )
 COV.start()
 
+
 @manager.command
 def test():
     """Runs the unit tests without test coverage."""
@@ -37,6 +34,7 @@ def test():
     if result.wasSuccessful():
         return 0
     return 1
+
 
 @manager.command
 def cov():
@@ -56,13 +54,10 @@ def cov():
         return 0
     return 1
 
+
 @manager.command
 def runserver():
 
-    
-    # apiApplication = createApplication()
-    # Server(host="127.0.0.1", port=9000)
-    # apiApplication.run()
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     os.environ['OAUTH_INSECURE_TRANSPORT'] = '1'
     os.environ['AUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -70,28 +65,18 @@ def runserver():
     os.environ['DEBUG'] = '1'
     os.environ['FLASK_DEBUG'] = '1'
 
-    
-
-    #for k in sorted(os.environ.keys()):
+    # for k in sorted(os.environ.keys()):
     #    print(k + ":" + os.environ[k])
 
-    #application = main.createApplication()
-    options = {'use_debugger':True, 'threaded':False, 'use_reloader':True}
+    # application = main.createApplication()
+    options = {'use_debugger': True, 'threaded': False, 'use_reloader': True}
     app.run(debug=False, host="127.0.0.1", port=9001, **options)
-
-#     # ptvsd.enable_attach(secret="my_secret", address=('0.0.0.0', 3000))
-
-
-
-#     # print('ptvsd is started')
-#     # options = {'use_debugger':True, 'threaded':False, 'use_reloader':True}
-#     # manager.run(debug=False, host="0.0.0.0", port=5000, **options)
-#     manager.run()
 
 
 @manager.command
 def hello():
     print("hello")
+
 
 if __name__ == "__main__":
     manager.run()

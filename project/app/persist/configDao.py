@@ -1,20 +1,21 @@
 
-from project.app.persist.baseDao import getSession
+from project.app.persist import baseDao
 from project.app.models.common import Config
 
 
-def getConfigByKey(key, session=None):
+def get_config_by_key(key, session=None):
 
-    if(session == None):
-        session = getSession()
+    if session is None:
+        session = baseDao.get_session()
 
-    configItem = session.query(Config).filter(Config.key == key).first()
-    return configItem
+    config_item = session.query(Config).filter(Config.key == key).first()
+    return config_item
 
-def getConfigAll(session=None):
 
-    if(session == None):
-        session = getSession()
+def get_config_all(session=None):
 
-    configItems = session.query(Config).all()
-    return configItems    
+    if session is None:
+        session = baseDao.get_session()
+
+    config_items = session.query(Config).all()
+    return config_items

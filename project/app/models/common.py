@@ -6,7 +6,6 @@ from project.app.models.baseModel import BaseModel
 class Config(BaseModel):
     __tablename__ = 'TB_CONFIG'
 
-
     # "CFGPRM_ID" integer NOT NULL, -- Surrogate ID for a configurable system parameter
     id = Column("CFGPRM_ID", Integer, primary_key=True)
 

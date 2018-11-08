@@ -2,19 +2,18 @@ import unittest
 import json
 from project.tests.web.baseTest import BaseTest 
 
-# @pytest.fixture(scope="class", autouse=True)
+
 class CommonTestCases(BaseTest):
 
     def testVersion_OK(self):
         print("Running: test_version_OK")
 
         resp = self.testClient.get('/api/v1.0/public/app/version')
-        self.debugResponse(resp)
+        self.debug_response(resp)
         assert resp.status_code == 200
         
-        codeDict1 = json.loads(resp.data)
-        assert "1.0" == codeDict1["application.version"].strip()
-
+        code_dict = json.loads(resp.data)
+        assert "1.0" == code_dict["application.version"].strip()
 
 
 if __name__ == '__main__':

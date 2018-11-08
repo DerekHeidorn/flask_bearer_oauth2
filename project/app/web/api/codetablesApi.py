@@ -10,28 +10,29 @@ from project.app.web.utils import dtoUtils
 
 api = Blueprint('codetables_api', __name__)
 
-allowableCodetableMap = {"CtUserStatuses" : CtUserStatuses, "CtUserTypes" : CtUserTypes}
-codetableCache = SimpleCache()
+allowable_codetable_map = {"CtUserStatuses": CtUserStatuses, "CtUserTypes": CtUserTypes}
+codetable_cache = SimpleCache()
+
 
 @api.route('/api/v1.0/admin/codetables/<codetableName>', methods=['GET'])
-def codetableByName(codetableName):
+def codetable_by_name(codetable_name):
 
-    allowedCodetable = allowableCodetableMap.get(codetableName)
+    allowed_codetable = allowable_codetable_map.get(codetable_name)
 
-    if allowedCodetable is not None:
+    if allowed_codetable is not None:
         # Check cache
-        cachedCodetable = codetableCache.get(codetableName)
+        cached_codetable = codetable_cache.get(codetable_name)
 
-        if(cachedCodetable is not None):
-            print("\n*** CachedcodeTable: " + str(cachedCodetable))
-            return jsonify(cachedCodetable)
+        if cached_codetable is not None:
+            print("\n*** CachedcodeTable: " + str(cached_codetable))
+            return jsonify(cached_codetable)
 
         else:
-            codetableData = codetablesService.getCodeTable(allowedCodetable)
-            data = dtoUtils.codetableSerialize(codetableData)
+            codetable_data = codetablesService.get_code_table(allowed_codetable)
+            data = dtoUtils.codetableSerialize(codetable_data)
             print("codetableData=" + str(data))
             if data:
-                codetableCache.add(codetableName, data)
+                codetable_cache.add(codetable_name, data)
                 return jsonify(data)
 
     abort(404)

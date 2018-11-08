@@ -25,4 +25,3 @@ class BatchJob(BaseModel):
 
     # "BATJOB_DETAILS" character varying(200), -- Details of the batch job
     details = Column("BATJOB_DETAILS", String(200))
-

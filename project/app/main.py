@@ -7,7 +7,7 @@ from project.app.web import oauth2
 from project.app.web.api import userApi, codetablesApi, commonApi
 
 
-def createApplication():
+def create_application():
 
     print("Creating Application...")
     app = Flask(__name__)
@@ -21,14 +21,13 @@ def createApplication():
     CORS(app)
     oauth2.init(app)
 
-
-    #app_settings = os.getenv(
+    # app_settings = os.getenv(
     #    'APP_SETTINGS',
     #    'project.server.config.DevelopmentConfig'
-    #)
-    #app.config.from_object(app_settings)
+    # )
+    # app.config.from_object(app_settings)
     
-    commonService.loadApplicationCacheFromDB()
+    commonService.load_application_cache_from_db()
 
     # -- API registration --
     app.register_blueprint(codetablesApi.api)
