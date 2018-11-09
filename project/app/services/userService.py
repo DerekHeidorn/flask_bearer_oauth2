@@ -19,6 +19,10 @@ def update_user(user_id, user_to_be_updated):
     return userDao.update_user(user_id, user_to_be_updated)
 
 
+def get_users():
+    return userDao.get_users()
+
+
 def get_user_by_id(user_id):
     return userDao.get_user(user_id)
 

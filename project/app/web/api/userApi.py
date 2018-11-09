@@ -13,12 +13,23 @@ from project.app.web import oauth2
 api = Blueprint('user_api', __name__)
 
 
+@api.route('/api/v1.0/admin/user', methods=['GET'])
+@oauth2.require_oauth('STAFF_ACCESS')
+def get_users():
+    users = userService.get_users()
+    user_list = []
+    for u in users:
+        user_list.append(dtoUtils.user_serialize(u))
+
+    return jsonify(user_list)
+
+
 @api.route('/api/v1.0/admin/user/<user_id>', methods=['GET'])
 @oauth2.require_oauth('STAFF_ACCESS')
 def get_user_by_id(user_id):
     current_user = userService.get_user_by_id(user_id)
     if current_user:
-        return jsonify(dtoUtils.userSerialize(current_user))
+        return jsonify(dtoUtils.user_serialize(current_user))
     else:
         #
         # In case we did not find the candidate by id
@@ -52,7 +63,7 @@ def update_public_user(user_id):
     if not updated_user:
         return make_response('', 404)
     else:
-        return jsonify(dtoUtils.userSerialize(updated_user))
+        return jsonify(dtoUtils.user_serialize(updated_user))
 
 
 @api.route('/api/v1.0/admin/user', methods=['POST'])
