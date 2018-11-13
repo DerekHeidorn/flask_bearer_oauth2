@@ -1,3 +1,5 @@
 /project/tests/web/__pycache__/*.pyc
 *.pyc
 /.vscode
+/.idea/codeStyles
+/.idea

@@ -1,44 +1,40 @@
-from project.app.services import userService
-from project.tests.utils import randomUtil
-from project.app.services.utils import userUtils
-from project.app.web.utils import authUtils
+from project.app.services import groupService, commonService
+from project.tests.utils import randomUtil, authUtils
+
 
 DEFAULT_PUBLIC_USER_PASSWORD = "fooBar@123"
-DEFAULT_PUBLIC_USERNAME = "Joe.Customer@foo.com.invali"
-DEFAULT_ADMIN_USERNAME = "sys.admin@foo.com.invali"
+DEFAULT_PUBLIC_UUID = "c95802ac-e465-11e8-9f32-f2801f1b9fd1"  # Joe.Customer@foo.com.invali
+DEFAULT_ADMIN_UUID = "c957fece-e465-11e8-9f32-f2801f1b9fd1"  # sys.admin@foo.com.invali
 DEFAULT_PUBLIC_CLIENT_ID = "CLTID-Zeq1LRso5q-iLU9RKCKnu"
 
 
-def create_public_user():
+def create_public_group():
 
-    username = randomUtil.random_username()
-    password = DEFAULT_PUBLIC_USER_PASSWORD
-    first_name = "FirstNm_" + randomUtil.random_string(6, 10)
-    last_name = "LastNm_" + randomUtil.random_string(6, 10)
+    group_name = "Group_" + randomUtil.random_string(6, 18)
+    new_group = groupService.add_group(group_name)
 
-    new_user = userService.add_public_user(DEFAULT_PUBLIC_CLIENT_ID, username, password, first_name, last_name)
-
-    return new_user
+    return new_group
 
 
 def get_default_staff():
 
-    staff = userService.get_user_by_username(DEFAULT_ADMIN_USERNAME)
-    assert staff is not None
-    bearer_token = _generate_jwt_token(staff)
+    bearer_token = _generate_jwt_token(DEFAULT_ADMIN_UUID)
 
-    return {"user": staff, "token": bearer_token}
+    return {"user_uuid": DEFAULT_ADMIN_UUID, "token": bearer_token}
 
 
-def _generate_jwt_token(user):
-    # print("client:" + str(client))
-    # print("grant_type:" + str(grant_type))
-    # print("user:" + str(user))
-    # print("scope:" + str(scope))
+def _generate_jwt_token(user_uuid):
 
-    authorities = userUtils.get_user_authorities(user)
-    # print("authorities:" + str(authorities))
-    token = authUtils.encode_auth_token(user, authorities)
-    # print("token:" + str(token ))
+    authority_list = _get_authorities(user_uuid)
+    token = authUtils.encode_auth_token(user_uuid, authority_list, commonService.get_config_by_key("oauth2_secret_key"))
 
     return token.decode("utf-8")
+
+
+def _get_authorities(user_uuid):
+    if DEFAULT_PUBLIC_UUID == user_uuid:
+        return ['CUST_ACCESS', 'CUST_PROFILE']
+    elif DEFAULT_ADMIN_UUID == user_uuid:
+        return ['STAFF_ACCESS', 'BATCH', 'SYSTEM']
+    else:
+        return None

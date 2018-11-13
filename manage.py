@@ -29,6 +29,9 @@ COV.start()
 @manager.command
 def test():
     """Runs the unit tests without test coverage."""
+    '''
+    other examples: python -m unittest project/tests/web/testCommon.py
+    '''
     tests = unittest.TestLoader().discover('project/tests/web', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():

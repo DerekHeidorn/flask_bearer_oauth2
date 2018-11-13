@@ -22,4 +22,4 @@ engine = create_engine(initializing_db_string, echo=engine_echo)
 
 # associate it with our custom Session class
 Session.configure(bind=engine)
-print("finshed setting up sqlalchemy for database...")
+print("finished setting up sqlalchemy for database...")
