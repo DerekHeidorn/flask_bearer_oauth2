@@ -1,6 +1,6 @@
 flask==1.0.2
-flask-script==2.0.6
-sqlalchemy==1.2.13
+flask-sqlalchemy==2.3.2
+sqlalchemy==1.2.14
 PyLD==1.0.3
 pytest==3.10.0
 psycopg2==2.7.5
@@ -9,3 +9,5 @@ wtforms==2.2.1
 werkzeug==0.14.1
 coverage==4.5.1
 PyJWT==1.6.4
+cryptography==2.3.1
+apscheduler==3.5.3

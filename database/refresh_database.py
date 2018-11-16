@@ -9,7 +9,8 @@ def refresh_database():
     files = ['scripts/wipe_database.sql',
              'scripts/tables.sql',
              'scripts/data_codetables.sql',
-             'scripts/test_data/TB_CONFIG.sql'
+             'scripts/test_data/TB_CONFIG.sql',
+             'scripts/test_data/Groups.sql'
 			 ]
 
     for f in files:
