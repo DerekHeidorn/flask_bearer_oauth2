@@ -95,6 +95,54 @@ CREATE TABLE public.TB_PERSON_TITLE (
    COMMENT ON COLUMN public.TB_CONFIG.CFGPRM_KEY IS 'ID name for a configurable parameter value';   
    COMMENT ON TABLE public.TB_CONFIG  IS 'Table for holding configurable system parameters.';
 
+    -- =================================================
+
+    CREATE TABLE public.TB_BATCH_JOB_CD
+   (	BATJOC_CD character varying(10) NOT NULL,
+	BATJOC_DE character varying(30) NOT NULL,
+	BATJOC_COMMENT character varying(500) NOT NULL,
+	 CONSTRAINT XPKTB_BATCH_JOB_CD PRIMARY KEY (BATJOC_CD)
+
+   )  ;
+
+   COMMENT ON COLUMN TB_BATCH_JOB_CD.BATJOC_CD IS 'Batch Job Code value';
+   COMMENT ON COLUMN TB_BATCH_JOB_CD.BATJOC_DE IS 'Batch Job Code description';
+   COMMENT ON COLUMN TB_BATCH_JOB_CD.BATJOC_COMMENT IS 'Batch Job Comments; include at least Job(s) involved and execution scheduling';
+   COMMENT ON TABLE TB_BATCH_JOB_CD  IS 'Batch Job code table';
+
+     CREATE TABLE public.TB_BATCH_JOB_STATUS_CD
+   (	BATJOBSTA_CD character varying(10) NOT NULL,
+	BATJOBSTA_DE character varying(50) NOT NULL,
+	 CONSTRAINT XPKTB_BATCH_JOB_STATUS_CD PRIMARY KEY (BATJOBSTA_CD)
+   )  ;
+
+   COMMENT ON COLUMN TB_BATCH_JOB_STATUS_CD.BATJOBSTA_CD IS 'Batch Job Status Code value';
+   COMMENT ON COLUMN TB_BATCH_JOB_STATUS_CD.BATJOBSTA_DE IS 'Batch Job Status Code description';
+   COMMENT ON TABLE TB_BATCH_JOB_STATUS_CD  IS 'Batch Job Status Code table';
+
+  CREATE TABLE public.TB_BATCH_JOB
+   (	BATJOB_ID serial NOT NULL,
+	BATJOC_CD character varying(10) NOT NULL,
+	BATJOB_START_TS timestamp without time zone NOT NULL,
+	BATJOB_END_TS timestamp without time zone,
+	BATJOBSTA_CD character varying(10) NOT NULL,
+	BATJOB_DETAILS character varying(200),
+	 CONSTRAINT XPKTB_BATCH_JOB PRIMARY KEY (BATJOB_ID),
+	 CONSTRAINT BATCH_TO_BATCH_CODE FOREIGN KEY (BATJOC_CD)
+		REFERENCES public.TB_BATCH_JOB_CD (BATJOC_CD) ,
+	 CONSTRAINT BATCH_TO_BATCH_STATUS FOREIGN KEY (BATJOBSTA_CD)
+		REFERENCES public.TB_BATCH_JOB_STATUS_CD (BATJOBSTA_CD)
+   )
+   ;
+
+   COMMENT ON COLUMN TB_BATCH_JOB.BATJOB_ID IS 'Batch Job ID';
+   COMMENT ON COLUMN TB_BATCH_JOB.BATJOC_CD IS 'Batch Job Code value';
+   COMMENT ON COLUMN TB_BATCH_JOB.BATJOB_START_TS IS 'Start Date of a Batch Job';
+   COMMENT ON COLUMN TB_BATCH_JOB.BATJOB_END_TS IS 'End Date of a Batch Job';
+   COMMENT ON COLUMN TB_BATCH_JOB.BATJOBSTA_CD IS 'Batch Status Code value';
+   COMMENT ON COLUMN TB_BATCH_JOB.BATJOB_DETAILS IS 'Details of the batch job';
+   COMMENT ON TABLE TB_BATCH_JOB  IS 'Batch Job Table';
+
   -- ===================================================================  
 
 

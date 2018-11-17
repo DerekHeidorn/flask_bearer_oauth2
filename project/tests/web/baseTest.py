@@ -1,10 +1,11 @@
 
 import unittest
 from project.app import main
+from project.tests.helpers import commonHelper
 
 
 class BaseTest(unittest.TestCase):
-
+    commonHelper.setup_dev_settings()
     app = main.create_application()
 
     def setUp(self):

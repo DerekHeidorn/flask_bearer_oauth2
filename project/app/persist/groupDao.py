@@ -131,3 +131,10 @@ def delete_group(group_id):
         return items_deleted > 0
 
     return False
+
+
+def get_group_count(session=None):
+    if session is None:
+        session = baseDao.get_session()
+    row_count = session.query(func.count(Group.group_id)).scalar()
+    return row_count
