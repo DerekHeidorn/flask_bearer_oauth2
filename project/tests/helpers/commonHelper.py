@@ -22,7 +22,7 @@ def setup_dev_settings():
     os.environ["APP_JWT_KEY"] = "BMcrqdcd7QeEmR8CXyU"
 
     # database config
-    os.environ["APP_DB_CONNECTION_URI"] = "postgresql://postgres:P$F$xs+n?5+Ug3AU5PTe3q@localhost/postgres"
+    os.environ["APP_DB_CONNECTION_URI"] = "postgresql://postgres:P$F$xs+n?5+Ug3AU5PTe3q@localhost/groups"
     os.environ["APP_DB_ENGINE_DEBUG"] = "False"
 
 

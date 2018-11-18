@@ -44,6 +44,9 @@ class Group(BaseModel):
     # USER_UUID
     group_uuid = Column("group_uuid", String(50))
 
+    # GRPTYP_CD
+    group_type_cd = Column("grptyp_cd", String(2))
+
     # GROUP_NAME		Last Name of the User
     group_name = Column("group_name", String(80))
 

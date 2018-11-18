@@ -1,3 +1,9 @@
+ALTER SEQUENCE public.tb_group_group_id_seq RESTART WITH 500;
+ALTER SEQUENCE public.tb_group_manager_manager_id_seq RESTART WITH 500;
+ALTER SEQUENCE public.tb_membership_membership_id_seq RESTART WITH 500;
+ALTER SEQUENCE public.tb_person_person_id_seq RESTART WITH 500;
+
+
 -- ========================================================================================================
 INSERT INTO public.tb_group(
             group_id, group_uuid, grptyp_cd, group_name)

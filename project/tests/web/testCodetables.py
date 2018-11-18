@@ -15,8 +15,8 @@ class CodetableTestCases(BaseTest):
         assert resp.status_code == 200
         code_dict = json.loads(resp.data)
 
-        assert "SP" == code_dict[0]["code"]
-        assert "Special Interest" == code_dict[0]["description"]
+        assert "FI" == code_dict[0]["code"]
+        assert "Fitness" == code_dict[0]["description"]
 
     def test_CtGroupTypesCached_OK(self):
         print("Running: test_CtGroupTypesCached_OK")
@@ -26,8 +26,8 @@ class CodetableTestCases(BaseTest):
         assert resp.status_code == 200
         code_dict = json.loads(resp.data)
 
-        assert "SP" == code_dict[0]["code"]
-        assert "Special Interest" == code_dict[0]["description"]
+        assert "FI" == code_dict[0]["code"]
+        assert "Fitness" == code_dict[0]["description"]
 
 
 if __name__ == '__main__':

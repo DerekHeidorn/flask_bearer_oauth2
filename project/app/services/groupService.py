@@ -35,4 +35,5 @@ def add_group(group_name):
     g = Group()
     g.group_uuid = uuid.uuid4()
     g.group_name = group_name
+    g.group_type_cd = 'SP'
     return groupDao.add_group(g)
