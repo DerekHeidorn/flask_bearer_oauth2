@@ -19,7 +19,8 @@ def get_public_groups():
     for g in groups:
         group_list.append(serializeUtils.serialize_group(g))
 
-    return jsonify(group_list)
+    resp = serializeUtils.generate_response_wrapper(group_list)
+    return jsonify(resp)
 
 
 @api.route('/api/v1.0/admin/group', methods=['GET'])
@@ -30,7 +31,8 @@ def get_groups():
     for g in groups:
         group_list.append(serializeUtils.serialize_group(g))
 
-    return jsonify(group_list)
+    resp = serializeUtils.generate_response_wrapper(group_list)
+    return jsonify(resp)
 
 
 @api.route('/api/v1.0/public/group/<group_uuid>', methods=['GET'])
@@ -39,7 +41,9 @@ def get_public_user_by_id(group_uuid):
     # TODO get token to validate the user
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
-        return jsonify(serializeUtils.serialize_group(current_group))
+        data = serializeUtils.serialize_group(current_group)
+        resp = serializeUtils.generate_response_wrapper(data)
+        return jsonify(resp)
     else:
         #
         # In case we did not find the candidate by id
@@ -53,7 +57,9 @@ def get_public_user_by_id(group_uuid):
 def get_user_by_id(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
-        return jsonify(serializeUtils.serialize_group(current_group))
+        data = serializeUtils.serialize_group(current_group)
+        resp = serializeUtils.generate_response_wrapper(data)
+        return jsonify(resp)
     else:
         #
         # In case we did not find the candidate by id
@@ -69,4 +75,6 @@ def add_public_user():
 
     new_group = groupService.add_group(group_name)
 
-    return jsonify(serializeUtils.serialize_group(new_group)), 201
+    data = serializeUtils.serialize_group(new_group)
+    resp = serializeUtils.generate_response_wrapper(data)
+    return jsonify(resp), 201

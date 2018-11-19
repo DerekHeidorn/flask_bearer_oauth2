@@ -94,7 +94,7 @@ def run_dev_server():
     setup_dev_settings()
     app = main.create_application()
     options = {'use_debugger': False, 'threaded': True, 'use_reloader': False}
-    app.run(debug=False, host="127.0.0.1", port=9000, **options)
+    app.run(debug=False, host="127.0.0.1", port=9001, **options)
 
 
 # ----------------------

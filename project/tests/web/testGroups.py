@@ -22,7 +22,7 @@ class GroupServiceTestCase(BaseTest):
         self.assertEquals(201, resp.status_code)
         response_data = json.loads(resp.data)
 
-        return response_data["group_uuid"]
+        return response_data["data"]["group_uuid"]
 
     def test_group_create(self):
         print("Running: test_group_create")
@@ -39,7 +39,7 @@ class GroupServiceTestCase(BaseTest):
 
         self.assertEquals(201, resp.status_code)
         response_data = json.loads(resp.data)
-        assert response_data["group_uuid"] is not None
+        assert response_data["data"]["group_uuid"] is not None
 
     def test_group_by_uuid_ok(self):
         print("Running: test_group_by_uuid_ok")
@@ -55,7 +55,7 @@ class GroupServiceTestCase(BaseTest):
 
         assert group is not None
         
-        self.assertEquals(group_uuid, group["group_uuid"])
+        self.assertEquals(group_uuid, group["data"]["group_uuid"])
         # self.assertEquals("Tester", user["firstName"])
 
 
