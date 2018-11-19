@@ -7,7 +7,7 @@ ALTER SEQUENCE public.tb_person_person_id_seq RESTART WITH 500;
 -- ========================================================================================================
 INSERT INTO public.tb_group(
             group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (1, 'fbaa6765-bf50-40a8-bb29-a32ce07ef3d9', 'SP', 'Avengers Role Playing Group');
+    VALUES (1, 'fbaa6765-bf50-40a8-bb29-a32ce07ef3d9', 'SP', 'The Avengers Group');
 -- 4e5d14ab-e91e-49b3-9c61-795748c41e09		Iron Man					Tony Stark
 INSERT INTO public.tb_person(
 	person_id, user_uuid, nick_name)
@@ -158,7 +158,7 @@ INSERT INTO public.tb_membership(
 -- ========================================================================================================	
 INSERT INTO public.tb_group(
             group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (3, 'c574ec5b-8a51-4eb5-b4a2-ba84fa27a85a', 'FI', 'Fitness Pal Users');
+    VALUES (3, 'c574ec5b-8a51-4eb5-b4a2-ba84fa27a85a', 'FI', 'Fitness Pal Members');
 
 -- ========================================================================================================
 INSERT INTO public.tb_group(
@@ -206,7 +206,7 @@ INSERT INTO public.tb_person(
 	VALUES (45, 'd81dc597-ed99-46a7-846f-6495898b40c9', 'JV');
 INSERT INTO public.tb_membership(
 	membership_id, group_id, person_id, membership_from_ts, membership_to_ts)
-	VALUES (45, 4, 45, CURRENT_DATE-2, null);
+	VALUES (45, 4, 45, CURRENT_DATE-10, CURRENT_DATE-1);
 -- ac6e6270-87eb-4be7-b3ce-385d9a7a2057		Leon Scott Kennedy			Resident Evil
 INSERT INTO public.tb_person(
 	person_id, user_uuid, nick_name)
@@ -225,7 +225,7 @@ INSERT INTO public.tb_membership(
 -- ========================================================================================================	
 INSERT INTO public.tb_group(
             group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (5, '00b2c66d-35b0-48ac-8039-31e67c7bc34c', 'FI', 'Sierra Workout Group');
+    VALUES (5, '00b2c66d-35b0-48ac-8039-31e67c7bc34c', 'FI', 'Company ABC Workout Group');
 
 
 	

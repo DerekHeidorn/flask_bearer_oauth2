@@ -1,7 +1,6 @@
 
-
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Table, MetaData
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from project.app.models.baseModel import BaseModel
 
@@ -72,7 +71,7 @@ class Membership(BaseModel):
     membership_id = Column("membership_id", Integer, primary_key=True)
 
     # PERSON_ID
-    person_id = Column("person_id", Integer)
+    person_id = Column("person_id", Integer, ForeignKey('tb_person.person_id'))
 
     # GROUP_ID
     group_id = Column("group_id", Integer)
@@ -83,8 +82,10 @@ class Membership(BaseModel):
     # MEMBERSHIP_TO_TS
     to_ts = Column("membership_to_ts", DateTime)
 
+    person = relationship("Person")
+
     def __repr__(self):
-        return "<Membership(id='%s')>" % self.id
+        return "<Membership(id='%s')>" % self.membership_id
 
 # CREATE TABLE general.TB_GROUP_MANAGER (
 # 	"MANAGER_ID" serial NOT NULL, -- System-generated ID for a Group.
@@ -105,7 +106,7 @@ class GroupManager(BaseModel):
     manager_id = Column("manager_id", Integer, primary_key=True)
 
     # PERSON_ID
-    person_id = Column("person_id", Integer)
+    person_id = Column("person_id", Integer, ForeignKey('tb_person.person_id'))
 
     # GROUP_ID
     group_id = Column("group_id", Integer)
@@ -116,5 +117,7 @@ class GroupManager(BaseModel):
     # MANAGER_TO_TS
     to_ts = Column("manager_to_ts", DateTime)
 
+    person = relationship("Person")
+
     def __repr__(self):
-        return "<GroupManager(id='%s')>" % self.id
+        return "<GroupManager(id='%s')>" % self.manager_id

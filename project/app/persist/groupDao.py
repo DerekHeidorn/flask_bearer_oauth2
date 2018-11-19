@@ -1,6 +1,6 @@
-from sqlalchemy import func
+from sqlalchemy import func, or_, and_
 
-from project.app.models.group import Group
+from project.app.models.group import Group, Membership, GroupManager
 from project.app.persist import baseDao
 
 
@@ -31,9 +31,9 @@ def get_groups(session=None):
     if session is None:
         session = baseDao.get_session()
 
-    all_users = session.query(Group).order_by(Group.group_name).all()
+    all_groups = session.query(Group).order_by(Group.group_name).all()
 
-    return all_users
+    return all_groups
 
 
 def get_group_by_id(group_id, session=None):
@@ -47,8 +47,8 @@ def get_group_by_id(group_id, session=None):
     if session is None:
         session = baseDao.get_session()
 
-    user = session.query(Group).filter(Group.group_id == group_id).first()
-    return user
+    group = session.query(Group).filter(Group.group_id == group_id).first()
+    return group
 
 
 def get_group_by_uuid(group_uuid, session=None):
@@ -62,8 +62,8 @@ def get_group_by_uuid(group_uuid, session=None):
     if session is None:
         session = baseDao.get_session()
 
-    user = session.query(Group).filter(Group.group_uuid == group_uuid).first()
-    return user
+    group = session.query(Group).filter(Group.group_uuid == group_uuid).first()
+    return group
 
 
 def get_group_by_name(group_name, session=None):
@@ -78,8 +78,8 @@ def get_group_by_name(group_name, session=None):
     if session is None:
         session = baseDao.get_session()
 
-    user = session.query(Group).filter(func.lower(Group.group_name) == func.lower(group_name)).first()
-    return user
+    group = session.query(Group).filter(func.lower(Group.group_name) == func.lower(group_name)).first()
+    return group
 
 
 def is_group_name_unique(group_name, exclude_group_id=None, session=None):
@@ -138,3 +138,29 @@ def get_group_count(session=None):
         session = baseDao.get_session()
     row_count = session.query(func.count(Group.group_id)).scalar()
     return row_count
+
+
+def get_active_group_members(group_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    members = session.query(Membership)\
+        .filter(and_(Membership.group_id == group_id,
+                     Membership.from_ts <= func.current_timestamp()),
+                or_(Membership.to_ts.is_(None), Membership.to_ts >= func.current_timestamp()))\
+        .all()
+
+    return members
+
+
+def get_active_group_managers(group_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    managers = session.query(GroupManager)\
+        .filter(GroupManager.group_id == group_id
+                and GroupManager.from_ts <= func.current_timestamp(),
+                or_(GroupManager.to_ts.is_(None), GroupManager.to_ts >= func.current_timestamp()))\
+        .all()
+
+    return managers

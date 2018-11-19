@@ -8,6 +8,12 @@ DEFAULT_PUBLIC_UUID = "c95802ac-e465-11e8-9f32-f2801f1b9fd1"  # Joe.Customer@foo
 DEFAULT_ADMIN_UUID = "c957fece-e465-11e8-9f32-f2801f1b9fd1"  # sys.admin@foo.com.invali
 DEFAULT_PUBLIC_CLIENT_ID = "CLTID-Zeq1LRso5q-iLU9RKCKnu"
 
+GROUP_THE_AVENGERS_GROUP_ID = 1
+GROUP_BROWN_COATS_GROUP_ID = 2
+GROUP_FITNESS_PAL_GROUP_ID = 3
+GROUP_ZOMBIE_APOCALPSE_GROUP_ID = 4
+GROUP_COMPANY_ABC_WORKOUT_GROUP_ID = 5
+
 
 def setup_dev_settings():
     # for using http instead of https
@@ -23,7 +29,7 @@ def setup_dev_settings():
 
     # database config
     os.environ["APP_DB_CONNECTION_URI"] = "postgresql://postgres:P$F$xs+n?5+Ug3AU5PTe3q@localhost/groups"
-    os.environ["APP_DB_ENGINE_DEBUG"] = "False"
+    os.environ["APP_DB_ENGINE_DEBUG"] = "True"
 
 
 def create_public_group():
