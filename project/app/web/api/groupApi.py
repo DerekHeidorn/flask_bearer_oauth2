@@ -112,7 +112,7 @@ def _get_external_user_info(user_uuid_list, bearer_token):
         user_data = resp.json()
         print("user_data=" + str(user_data))
 
-        return user_data
+        return user_data['data']
     else:
         print("resp.status_code=" + str(resp.status_code))
         return None

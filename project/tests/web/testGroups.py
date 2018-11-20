@@ -72,11 +72,12 @@ class GroupServiceTestCase(BaseTest):
 
         self.debug_response(resp)
         self.assertEqual(200, resp.status_code)
-        group = json.loads(resp.data)
+        json_data = json.loads(resp.data)
+        print("**group: " + str(json_data))
 
         assert group is not None
 
-        self.assertEqual(group.group_uuid, group["data"]["group"]["group_uuid"])
+        self.assertEqual(str(group.group_uuid), json_data['data']["group"]["group_uuid"])
         # self.assertEqual("Tester", user["firstName"])
 
 
