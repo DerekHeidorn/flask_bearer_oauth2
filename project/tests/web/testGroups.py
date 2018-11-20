@@ -19,7 +19,7 @@ class GroupServiceTestCase(BaseTest):
                                              )
                                     )
         self.debug_response(resp)
-        self.assertEquals(201, resp.status_code)
+        self.assertEqual(201, resp.status_code)
         response_data = json.loads(resp.data)
 
         return response_data["data"]["group_uuid"]
@@ -37,7 +37,7 @@ class GroupServiceTestCase(BaseTest):
                                     )
         self.debug_response(resp)
 
-        self.assertEquals(201, resp.status_code)
+        self.assertEqual(201, resp.status_code)
         response_data = json.loads(resp.data)
         assert response_data["data"]["group_uuid"] is not None
 
@@ -50,13 +50,34 @@ class GroupServiceTestCase(BaseTest):
                                    headers={"Authorization": "bearer " + staff_info['token']})
         
         self.debug_response(resp)
-        self.assertEquals(200, resp.status_code)
+        self.assertEqual(200, resp.status_code)
         group = json.loads(resp.data)
 
         assert group is not None
         
-        self.assertEquals(group_uuid, group["data"]["group_uuid"])
-        # self.assertEquals("Tester", user["firstName"])
+        self.assertEqual(group_uuid, group["data"]["group_uuid"])
+        # self.assertEqual("Tester", user["firstName"])
+
+# /api/v1.0/public/group/detail/<group_uuid>
+    def test_get_public_group_detail_by_uuid(self):
+        print("Running: test_get_public_group_detail_by_uuid")
+        user_info = commonHelper.get_default_public_user()
+        group = commonHelper.get_group(commonHelper.GROUP_THE_AVENGERS_GROUP_ID)
+
+        print("user_info['token']: " + str(user_info['token']))
+        print("group.group_uuid: " + str(group.group_uuid))
+
+        resp = self.testClient.get('/api/v1.0/public/group/detail/' + str(group.group_uuid),
+                                   headers={"Authorization": "bearer " + user_info['token']})
+
+        self.debug_response(resp)
+        self.assertEqual(200, resp.status_code)
+        group = json.loads(resp.data)
+
+        assert group is not None
+
+        self.assertEqual(group.group_uuid, group["data"]["group"]["group_uuid"])
+        # self.assertEqual("Tester", user["firstName"])
 
 
 if __name__ == '__main__':

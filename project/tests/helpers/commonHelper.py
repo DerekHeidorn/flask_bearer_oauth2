@@ -1,5 +1,5 @@
 import os
-from project.app.services import groupService, commonService
+from project.app.services import groupService
 from project.tests.utils import randomUtil, authUtils
 from project.app import main
 
@@ -29,7 +29,7 @@ def setup_dev_settings():
 
     # database config
     os.environ["APP_DB_CONNECTION_URI"] = "postgresql://postgres:P$F$xs+n?5+Ug3AU5PTe3q@localhost/groups"
-    os.environ["APP_DB_ENGINE_DEBUG"] = "True"
+    os.environ["APP_DB_ENGINE_DEBUG"] = "False"
 
 
 def create_public_group():
@@ -40,6 +40,10 @@ def create_public_group():
     return new_group
 
 
+def get_group(group_id):
+    return groupService.get_group_by_id(group_id)
+
+
 def get_default_staff():
 
     bearer_token = _generate_jwt_token(DEFAULT_ADMIN_UUID)
@@ -47,9 +51,17 @@ def get_default_staff():
     return {"user_uuid": DEFAULT_ADMIN_UUID, "token": bearer_token}
 
 
+def get_default_public_user():
+
+    bearer_token = _generate_jwt_token(DEFAULT_PUBLIC_UUID)
+
+    return {"user_uuid": DEFAULT_PUBLIC_UUID, "token": bearer_token}
+
+
 def _generate_jwt_token(user_uuid):
 
     authority_list = _get_authorities(user_uuid)
+    print("authority_list=" + str(authority_list))
     oauth2_secret_key = main.global_config["APP_JWT_KEY"]
     token = authUtils.encode_auth_token(user_uuid, authority_list, oauth2_secret_key)
 

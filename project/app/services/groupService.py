@@ -1,8 +1,6 @@
 import uuid
-import requests
 from project.app.models.group import Group
 from project.app.persist import groupDao, baseDao
-
 
 
 class GroupDetail:
@@ -70,21 +68,3 @@ def add_group(group_name):
     g.group_name = group_name
     g.group_type_cd = 'SP'
     return groupDao.add_group(g)
-
-
-def _get_user_info(user_uuid):
-    # api-endpoint
-    url = "http://127.0.0.1:9000/api/v1.0/public/user/detail/" + user_uuid
-
-    # sending get request and saving the response as response object
-    r = requests.get(url=url)
-
-    # extracting data in json format
-    response_data = r.json()
-
-    # extracting latitude, longitude and formatted address
-    # of the first matching location
-    first_name = response_data['data']['first_name']
-    last_name = response_data['data']['last_name']
-
-    return {'user_uuid': user_uuid, 'first_name': first_name, 'last_name': last_name}

@@ -39,7 +39,7 @@ INSERT INTO public.tb_membership(
 -- 5fa2a30d-403c-4ae8-b3fa-5dd207ef926b		Vision						Victor Shade
 INSERT INTO public.tb_person(
 	person_id, user_uuid, nick_name)
-	VALUES (13, '5fa2a30d-403c-4ae8-b3fa-5dd207ef926b', 'Wasp');
+	VALUES (13, '5fa2a30d-403c-4ae8-b3fa-5dd207ef926b', 'Vision');
 INSERT INTO public.tb_membership(
 	membership_id, group_id, person_id, membership_from_ts, membership_to_ts)
 	VALUES (13, 1, 13, CURRENT_DATE-2, null);

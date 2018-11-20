@@ -22,18 +22,44 @@ def serialize_person(person):
     return {"user_uuid": person.user_uuid, "nick_name": person.nick_name}
 
 
-def serialize_group_detail(group_details):
+def serialize_group_detail(group_details, user_info=None):
     group = serialize_group(group_details.group)
 
     active_members = []
     for m in group_details.active_members:
-        active_members.append(serialize_person(m.person))
+        user = None
+        if user_info:
+            for u in user_info:
+                print("u=" + str(u))
+                if u.user_uuid == m.person.user_uuid:
+                    user = u
+                    break
+        if user is not None:
+            active_members.append({"user_uuid": m.person.user_uuid,
+                                   "nick_name": m.person.nick_name,
+                                   "first_name": user['first_name'],
+                                   "last_name": user['last_name']})
+        else:
+            active_members.append(serialize_person(m.person))
 
     active_managers = []
     for m in group_details.active_managers:
-        active_managers.append(serialize_person(m.person))
+        user = None
+        if user_info:
+            for u in user_info:
+                if u.user_uuid == m.person.user_uuid:
+                    user = u
+                    break
+        if user is not None:
+            active_managers.append({"user_uuid": m.person.user_uuid,
+                                    "nick_name": m.person.nick_name,
+                                    "first_name": user['first_name'],
+                                    "last_name": user['last_name']})
+        else:
+            active_managers.append(serialize_person(m.person))
 
     return {"group": group, "active_members": active_members, "active_managers": active_managers}
+
 
 
 def serialize_codetable(codetable_data):
