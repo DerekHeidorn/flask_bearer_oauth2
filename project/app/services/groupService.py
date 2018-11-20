@@ -77,3 +77,12 @@ def get_group_member_by_uuid(group_uuid, person_uuid):
     person = groupDao.get_person_by_uuid(person_uuid, session)
 
     return groupDao.get_group_member(group.group_id, person.person_id, session)
+
+
+def get_group_manager_by_uuid(group_uuid, person_uuid):
+    session = baseDao.get_session()
+
+    group = groupDao.get_group_by_uuid(group_uuid, session)
+    person = groupDao.get_person_by_uuid(person_uuid, session)
+
+    return groupDao.get_group_manager(group.group_id, person.person_id, session)

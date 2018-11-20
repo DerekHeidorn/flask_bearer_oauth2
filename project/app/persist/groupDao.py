@@ -153,6 +153,19 @@ def get_group_member(group_id, person_id, session=None):
     return member
 
 
+def get_group_manager(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    member = session.query(GroupManager)\
+        .filter(and_(GroupManager.group_id == group_id,
+                     GroupManager.person_id == person_id
+                     )) \
+        .first()
+
+    return member
+
+
 def get_person_by_uuid(user_uuid, session=None):
     if session is None:
         session = baseDao.get_session()

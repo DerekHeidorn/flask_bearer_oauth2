@@ -39,6 +39,23 @@ def serialize_membership(membership, user_info=None):
     return d
 
 
+def serialize_manager(manager, user_info=None):
+
+    d = dict()
+    if user_info is not None:
+        if 'first_name' in user_info:
+            d['first_name'] = user_info['first_name']
+        if 'last_name' in user_info:
+            d['last_name'] = user_info['last_name']
+
+    d['user_uuid'] = manager.person.user_uuid
+    d['nick_name'] = manager.person.nick_name
+    d['manager_from_ts'] = str(manager.from_ts)
+    d['manager_to_ts'] = str(manager.to_ts)
+
+    return d
+
+
 def serialize_group_detail(group_details, user_info=None):
     group = serialize_group(group_details.group)
 

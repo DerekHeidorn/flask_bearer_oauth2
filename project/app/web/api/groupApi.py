@@ -83,6 +83,35 @@ def get_public_membership_detail_by_uuid(group_uuid, member_uuid):
         abort(404)
 
 
+@api.route('/api/v1.0/public/group/<group_uuid>/manager/detail/<manager_uuid>', methods=['GET'])
+@oauth2.require_oauth('CUST_ACCESS')
+def get_public_manager_detail_by_uuid(group_uuid, manager_uuid):
+
+    # manager_uuid is the user_uuid
+    group_manager = groupService.get_group_manager_by_uuid(group_uuid, manager_uuid)
+    print("group_manager=" + str(group_manager))
+
+    if group_manager:
+
+        # print("current_token(type)=" + str(type(current_token)))
+        bearer_token = request.headers['Authorization']
+
+        if current_token is not None:
+            user_data = _get_external_user_info(manager_uuid, bearer_token)
+            data = serializeUtils.serialize_manager(group_manager, user_info=user_data)
+        else:
+            data = serializeUtils.serialize_manager(group_manager)
+
+        resp = serializeUtils.generate_response_wrapper(data)
+        return jsonify(resp)
+    else:
+        #
+        # In case we did not find the candidate by id
+        # we send HTTP 404 - Not Found error to the client
+        #
+        abort(404)
+
+
 @api.route('/api/v1.0/public/group/detail/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('CUST_ACCESS')
 def get_public_group_detail_by_uuid(group_uuid):
