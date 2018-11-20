@@ -22,6 +22,23 @@ def serialize_person(person):
     return {"user_uuid": person.user_uuid, "nick_name": person.nick_name}
 
 
+def serialize_membership(membership, user_info=None):
+
+    d = dict()
+    if user_info is not None:
+        if 'first_name' in user_info:
+            d['first_name'] = user_info['first_name']
+        if 'last_name' in user_info:
+            d['last_name'] = user_info['last_name']
+
+    d['user_uuid'] = membership.person.user_uuid
+    d['nick_name'] = membership.person.nick_name
+    d['membership_from_ts'] = str(membership.from_ts)
+    d['membership_to_ts'] = str(membership.to_ts)
+
+    return d
+
+
 def serialize_group_detail(group_details, user_info=None):
     group = serialize_group(group_details.group)
 
@@ -31,11 +48,11 @@ def serialize_group_detail(group_details, user_info=None):
         if user_info:
             for u in user_info:
                 print("u=" + str(u))
-                if u['user_uuid'] == m.person.user_uuid:
+                if u['user_uuid'] == str(m.person.user_uuid):
                     user = u
                     break
         if user is not None:
-            active_members.append({"user_uuid": m.person.user_uuid,
+            active_members.append({"user_uuid": str(m.person.user_uuid),
                                    "nick_name": m.person.nick_name,
                                    "first_name": user['first_name'],
                                    "last_name": user['last_name']})
@@ -47,11 +64,11 @@ def serialize_group_detail(group_details, user_info=None):
         user = None
         if user_info:
             for u in user_info:
-                if u['user_uuid'] == m.person.user_uuid:
+                if u['user_uuid'] == str(m.person.user_uuid):
                     user = u
                     break
         if user is not None:
-            active_managers.append({"user_uuid": m.person.user_uuid,
+            active_managers.append({"user_uuid": str(m.person.user_uuid),
                                     "nick_name": m.person.nick_name,
                                     "first_name": user['first_name'],
                                     "last_name": user['last_name']})

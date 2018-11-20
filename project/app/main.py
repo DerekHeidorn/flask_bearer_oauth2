@@ -16,6 +16,11 @@ from project.app.web.api import commonApi, groupApi, codetablesApi
 global_config = {}
 
 
+def set_global_config_item(key, value):
+    if value is not None and len(value) > 0:
+        global_config[key] = value
+
+
 def create_application():
     print("Creating Application...")
     app = Flask(__name__)
@@ -41,12 +46,13 @@ def create_application():
     app.config['OAUTH2_JWT_EXP'] = 3800
 
     # load keys and DB config globally
-    global_config["APP_MODE"] = os.environ["APP_MODE"]
-    global_config["APP_SECRET_KEY"] = os.environ["APP_SECRET_KEY"]
-    global_config["APP_JWT_KEY"] = os.environ["APP_JWT_KEY"]
-    global_config["APP_FLASK_SECRET_KEY"] = os.environ["APP_FLASK_SECRET_KEY"]
-    global_config["APP_DB_CONNECTION_URI"] = os.environ["APP_DB_CONNECTION_URI"]
-    global_config["APP_DB_ENGINE_DEBUG"] = os.environ["APP_DB_ENGINE_DEBUG"]
+    set_global_config_item("APP_MODE", os.environ["APP_MODE"])
+    set_global_config_item("APP_SECRET_KEY", os.environ["APP_SECRET_KEY"])
+    set_global_config_item("APP_JWT_KEY", os.environ["APP_JWT_KEY"])
+    set_global_config_item("APP_FLASK_SECRET_KEY", os.environ["APP_FLASK_SECRET_KEY"])
+    set_global_config_item("APP_DB_CONNECTION_URI", os.environ["APP_DB_CONNECTION_URI"])
+    set_global_config_item("APP_DB_ENGINE_DEBUG", os.environ["APP_DB_ENGINE_DEBUG"])
+    set_global_config_item("APP_EXTERNAL_API_USERS", os.environ["APP_EXTERNAL_API_USERS"])
 
     infrastructure.database_init()
     CORS(app,

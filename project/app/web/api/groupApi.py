@@ -9,6 +9,7 @@ from authlib.flask.oauth2 import current_token
 from project.app.services import groupService
 from project.app.web.utils import serializeUtils
 from project.app.web import oauth2
+from project.app import main
 
 api = Blueprint('group_api', __name__)
 
@@ -53,6 +54,35 @@ def get_public_group_by_uuid(group_uuid):
         abort(404)
 
 
+@api.route('/api/v1.0/public/group/<group_uuid>/member/detail/<member_uuid>', methods=['GET'])
+@oauth2.require_oauth('CUST_ACCESS')
+def get_public_membership_detail_by_uuid(group_uuid, member_uuid):
+
+    # member_uuid is the user_uuid
+    membership = groupService.get_group_member_by_uuid(group_uuid, member_uuid)
+    print("membership=" + str(membership))
+
+    if membership:
+
+        # print("current_token(type)=" + str(type(current_token)))
+        bearer_token = request.headers['Authorization']
+
+        if current_token is not None:
+            user_data = _get_external_user_info(member_uuid, bearer_token)
+            data = serializeUtils.serialize_membership(membership, user_info=user_data)
+        else:
+            data = serializeUtils.serialize_membership(membership)
+
+        resp = serializeUtils.generate_response_wrapper(data)
+        return jsonify(resp)
+    else:
+        #
+        # In case we did not find the candidate by id
+        # we send HTTP 404 - Not Found error to the client
+        #
+        abort(404)
+
+
 @api.route('/api/v1.0/public/group/detail/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('CUST_ACCESS')
 def get_public_group_detail_by_uuid(group_uuid):
@@ -74,7 +104,7 @@ def get_public_group_detail_by_uuid(group_uuid):
         bearer_token = request.headers['Authorization']
 
         if current_token is not None:
-            user_data = _get_external_user_info(user_uuid_list, bearer_token)
+            user_data = _get_external_user_info_list(user_uuid_list, bearer_token)
             data = serializeUtils.serialize_group_detail(group_details, user_info=user_data)
         else:
             data = serializeUtils.serialize_group_detail(group_details)
@@ -89,9 +119,48 @@ def get_public_group_detail_by_uuid(group_uuid):
         abort(404)
 
 
-def _get_external_user_info(user_uuid_list, bearer_token):
+def _get_external_user_info(user_uuid, bearer_token):
+    user_api_url = None
+    if "APP_EXTERNAL_API_USERS" in main.global_config:
+        user_api_url = main.global_config["APP_EXTERNAL_API_USERS"]
+
+    if user_api_url is None:
+        return None
+
     # api-endpoint
-    url = "http://127.0.0.1:9000/api/v1.0/public/user/details"
+    url = user_api_url + "/public/user/details/" + user_uuid
+
+    print("bearer_token=" + str(bearer_token))
+    print("user_uuid=" + str(user_uuid))
+
+    # sending get request and saving the response as response object
+    headers = {"Authorization": bearer_token, "Content-Type": "application/json"}
+    resp = requests.get(url=url, headers=headers)
+
+    if resp.status_code == 200:
+
+        print("resp=" + str(resp))
+
+        # extracting data in json format
+        user_data = resp.json()
+        print("user_data=" + str(user_data))
+
+        return user_data['data']
+    else:
+        print("resp.status_code=" + str(resp.status_code))
+        return None
+
+
+def _get_external_user_info_list(user_uuid_list, bearer_token):
+    user_api_url = None
+    if "APP_EXTERNAL_API_USERS" in main.global_config:
+        user_api_url = main.global_config["APP_EXTERNAL_API_USERS"]
+
+    if user_api_url is None:
+        return None
+
+    # api-endpoint
+    url = user_api_url + "/public/user/details"
 
     print("bearer_token=" + str(bearer_token))
     print("user_uuid_list=" + str(user_uuid_list))

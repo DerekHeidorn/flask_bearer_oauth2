@@ -1,6 +1,6 @@
 from sqlalchemy import func, or_, and_
 
-from project.app.models.group import Group, Membership, GroupManager
+from project.app.models.group import Group, Person, Membership, GroupManager
 from project.app.persist import baseDao
 
 
@@ -138,6 +138,27 @@ def get_group_count(session=None):
         session = baseDao.get_session()
     row_count = session.query(func.count(Group.group_id)).scalar()
     return row_count
+
+
+def get_group_member(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    member = session.query(Membership)\
+        .filter(and_(Membership.group_id == group_id,
+                     Membership.person_id == person_id
+                     )) \
+        .first()
+
+    return member
+
+
+def get_person_by_uuid(user_uuid, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    person = session.query(Person).filter(Person.user_uuid == user_uuid).first()
+    return person
 
 
 def get_active_group_members(group_id, session=None):

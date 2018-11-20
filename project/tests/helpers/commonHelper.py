@@ -31,6 +31,8 @@ def setup_dev_settings():
     os.environ["APP_DB_CONNECTION_URI"] = "postgresql://postgres:P$F$xs+n?5+Ug3AU5PTe3q@localhost/groups"
     os.environ["APP_DB_ENGINE_DEBUG"] = "False"
 
+    os.environ["APP_EXTERNAL_API_USERS"] = ""
+
 
 def create_public_group():
 
