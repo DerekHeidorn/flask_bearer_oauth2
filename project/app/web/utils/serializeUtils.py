@@ -18,6 +18,24 @@ def serialize_group(group):
     return {"group_uuid": group.group_uuid, "group_name": group.group_name}
 
 
+def serialize_person(person):
+    return {"user_uuid": person.user_uuid, "nick_name": person.nick_name}
+
+
+def serialize_group_detail(group_details):
+    group = serialize_group(group_details.group)
+
+    active_members = []
+    for m in group_details.active_members:
+        active_members.append(serialize_person(m.person))
+
+    active_managers = []
+    for m in group_details.active_managers:
+        active_managers.append(serialize_person(m.person))
+
+    return {"group": group, "active_members": active_members, "active_managers": active_managers}
+
+
 def serialize_codetable(codetable_data):
     data = []
     for item in codetable_data:

@@ -37,8 +37,7 @@ def get_groups():
 
 @api.route('/api/v1.0/public/group/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('CUST_ACCESS')
-def get_public_user_by_id(group_uuid):
-    # TODO get token to validate the user
+def get_public_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
         data = serializeUtils.serialize_group(current_group)
@@ -52,9 +51,25 @@ def get_public_user_by_id(group_uuid):
         abort(404)
 
 
+@api.route('/api/v1.0/public/group/detail/<group_uuid>', methods=['GET'])
+@oauth2.require_oauth('CUST_ACCESS')
+def get_public_group_detail_by_uuid(group_uuid):
+    group_detail = groupService.get_group_detail_by_uuid(group_uuid)
+    if group_detail:
+        data = serializeUtils.serialize_group_detail(group_detail)
+        resp = serializeUtils.generate_response_wrapper(data)
+        return jsonify(resp)
+    else:
+        #
+        # In case we did not find the candidate by id
+        # we send HTTP 404 - Not Found error to the client
+        #
+        abort(404)
+
+
 @api.route('/api/v1.0/admin/group/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('STAFF_ACCESS')
-def get_user_by_id(group_uuid):
+def get_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
         data = serializeUtils.serialize_group(current_group)
@@ -70,7 +85,7 @@ def get_user_by_id(group_uuid):
 
 @api.route('/api/v1.0/admin/group', methods=['POST'])
 @oauth2.require_oauth('STAFF_ACCESS')
-def add_public_user():
+def add_public_group():
     group_name = request.form["group_name"]
 
     new_group = groupService.add_group(group_name)
