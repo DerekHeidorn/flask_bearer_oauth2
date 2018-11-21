@@ -2,7 +2,7 @@
 from flask import Blueprint
 from flask import jsonify
 from flask import abort
-from werkzeug.contrib.cache import SimpleCache
+from cacheout import Cache
 
 from project.app.models.codetables.group import CtGroupTypes
 from project.app.services import codetablesService
@@ -11,7 +11,7 @@ from project.app.web.schemas.generalSchemas import CodeTableSchema
 api = Blueprint('codetables_api', __name__)
 
 allowable_codetable_map = {"CtGroupTypes": CtGroupTypes}
-codetable_cache = SimpleCache()
+_codetable_cache = Cache(maxsize=200, ttl=5 * 60)
 
 
 @api.route('/api/v1.0/admin/codetables/<codetable_name>', methods=['GET'])
@@ -21,7 +21,7 @@ def codetable_by_name(codetable_name):
 
     if allowed_codetable is not None:
         # Check cache
-        cached_codetable = codetable_cache.get(codetable_name)
+        cached_codetable = _codetable_cache.get(codetable_name)
 
         if cached_codetable is not None:
             return jsonify(cached_codetable)
@@ -30,7 +30,7 @@ def codetable_by_name(codetable_name):
             codetable_data = codetablesService.get_code_table(allowed_codetable)
             data = CodeTableSchema().dump(codetable_data, many=True)
             if data:
-                codetable_cache.add(codetable_name, data)
+                _codetable_cache.add(codetable_name, data)
                 return jsonify(data)
 
     abort(404)
