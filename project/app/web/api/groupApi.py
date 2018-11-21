@@ -9,7 +9,7 @@ from authlib.flask.oauth2 import current_token
 from project.app.services import groupService
 from project.app.web.utils import serializeUtils
 from project.app.web import oauth2
-from project.app import main
+from project.app import core
 from project.app.web.schemas.groupSchemas import GroupSchema, PersonSchema
 
 api = Blueprint('group_api', __name__)
@@ -151,8 +151,8 @@ def get_public_group_detail_by_uuid(group_uuid):
 
 def _get_external_user_info(user_uuid, bearer_token):
     user_api_url = None
-    if "APP_EXTERNAL_API_USERS" in main.global_config:
-        user_api_url = main.global_config["APP_EXTERNAL_API_USERS"]
+    if "APP_EXTERNAL_API_USERS" in core.global_config:
+        user_api_url = core.global_config["APP_EXTERNAL_API_USERS"]
 
     if user_api_url is None:
         return None
@@ -183,8 +183,8 @@ def _get_external_user_info(user_uuid, bearer_token):
 
 def _get_external_user_info_list(user_uuid_list, bearer_token):
     user_api_url = None
-    if "APP_EXTERNAL_API_USERS" in main.global_config:
-        user_api_url = main.global_config["APP_EXTERNAL_API_USERS"]
+    if "APP_EXTERNAL_API_USERS" in core.global_config:
+        user_api_url = core.global_config["APP_EXTERNAL_API_USERS"]
 
     if user_api_url is None:
         return None

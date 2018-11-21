@@ -1,7 +1,7 @@
 import os
 from project.app.services import groupService
 from project.tests.utils import randomUtil, authUtils
-from project.app import main
+from project.app import core
 
 
 DEFAULT_PUBLIC_UUID = "c95802ac-e465-11e8-9f32-f2801f1b9fd1"  # Joe.Customer@foo.com.invali
@@ -64,7 +64,7 @@ def _generate_jwt_token(user_uuid):
 
     authority_list = _get_authorities(user_uuid)
     print("authority_list=" + str(authority_list))
-    oauth2_secret_key = main.global_config["APP_JWT_KEY"]
+    oauth2_secret_key = core.global_config["APP_JWT_KEY"]
     token = authUtils.encode_auth_token(user_uuid, authority_list, oauth2_secret_key)
 
     return token.decode("utf-8")

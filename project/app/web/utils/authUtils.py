@@ -1,6 +1,6 @@
 import jwt
 from project.app.services import commonService
-from project.app import main
+from project.app import core
 
 def decode_auth_token(auth_token):
     """
@@ -42,7 +42,7 @@ def decode_auth_token_payload(jwt_token):
         #            options=None,  # type: Dict
         #            **kwargs):
         payload = jwt.decode(jwt_token,
-                             key=main.global_config["APP_JWT_KEY"],
+                             key=core.global_config["APP_JWT_KEY"],
                              algorithms=['HS512'])
         return payload
     except jwt.ExpiredSignatureError:

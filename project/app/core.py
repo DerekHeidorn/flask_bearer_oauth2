@@ -1,8 +1,12 @@
 import os
+import logging
 from pytz import utc
 
-from flask import Flask
+from flask import current_app, Flask, request
 from flask_cors import CORS
+from werkzeug.local import LocalProxy
+from werkzeug.exceptions import HTTPException
+from marshmallow import ValidationError
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
@@ -10,10 +14,21 @@ from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 from project.app.persist import infrastructure
 from project.app.services import commonService, schedulerService
 from project.app.web import oauth2
+from project.app.web import errorHandlerAdvice
 from project.app.web.api import commonApi, groupApi, codetablesApi
 
 
 global_config = {}
+
+# logger object for all views to use
+logger = LocalProxy(lambda: current_app.logger)
+
+
+class RequestFormatter(logging.Formatter):
+    def format(self, record):
+        record.url = request.url
+        record.remote_addr = request.remote_addr
+        return super().format(record)
 
 
 def set_global_config_item(key, value):
@@ -24,6 +39,11 @@ def set_global_config_item(key, value):
 def create_application():
     print("Creating Application...")
     app = Flask(__name__)
+
+    # Global Error handlers
+    app.register_error_handler(ValidationError, errorHandlerAdvice.handle_validation_error)
+    app.register_error_handler(HTTPException, errorHandlerAdvice.handle_http_exception)
+    app.register_error_handler(Exception, errorHandlerAdvice.handle_error)
 
     required_os_environment_settings = [
         "APP_SECRET_KEY",
@@ -44,6 +64,7 @@ def create_application():
     app.config['OAUTH2_JWT_KEY'] = os.environ["APP_JWT_KEY"]
     app.config['OAUTH2_JWT_ALG'] = 'HS512'
     app.config['OAUTH2_JWT_EXP'] = 3800
+    app.config['APP_LOG_FILE'] = 'app.log'
 
     # load keys and DB config globally
     set_global_config_item("APP_MODE", os.environ["APP_MODE"])
@@ -54,6 +75,25 @@ def create_application():
     set_global_config_item("APP_DB_ENGINE_DEBUG", os.environ["APP_DB_ENGINE_DEBUG"])
     set_global_config_item("APP_EXTERNAL_API_USERS", os.environ["APP_EXTERNAL_API_USERS"])
 
+    # -- logging --
+    formatter = RequestFormatter(
+        "%(asctime)s %(remote_addr)s: requested %(url)s: %(levelname)s in [%(module)s: %(lineno)d]: %(message)s"
+    )
+
+    if app.config.get("APP_LOG_FILE"):
+        fh = logging.FileHandler(app.config.get("APP_LOG_FILE"))
+        fh.setLevel(logging.DEBUG)
+        fh.setFormatter(formatter)
+        app.logger.addHandler(fh)
+
+    logging_stream = logging.StreamHandler()
+    logging_stream.setLevel(logging.DEBUG)
+    logging_stream.setFormatter(formatter)
+
+    app.logger.addHandler(logging_stream)
+    app.logger.setLevel(logging.DEBUG)
+
+    # setup database
     infrastructure.database_init()
     CORS(app,
          # resources={r"/api/*": {"origins": "http://127.0.0.1:4200"}},
