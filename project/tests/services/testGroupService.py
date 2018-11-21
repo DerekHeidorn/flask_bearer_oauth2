@@ -17,7 +17,7 @@ class GroupServiceTestCase(BaseTest):
         print("running test_get_group_data...")
         group = groupService.get_group_by_id(commonHelper.GROUP_THE_AVENGERS_GROUP_ID)
 
-        group_data = groupService.get_group_data(group.group_id)
+        group_data = groupService.get_group_detail(group.group_id)
         print("group_data=" + str(group_data))
         print("group_data.group=" + str(group_data.group))
         for m in group_data.active_members:
@@ -34,7 +34,7 @@ class GroupServiceTestCase(BaseTest):
         print("running test_get_group_data...")
         group = groupService.get_group_by_id(commonHelper.GROUP_COMPANY_ABC_WORKOUT_GROUP_ID)
 
-        group_data = groupService.get_group_data(group.group_id)
+        group_data = groupService.get_group_detail(group.group_id)
         print("group_data=" + str(group_data))
         print("group_data.group=" + str(group_data.group))
         for m in group_data.active_members:
@@ -50,7 +50,7 @@ class GroupServiceTestCase(BaseTest):
         print("running test_get_group_data...")
         group = groupService.get_group_by_id(commonHelper.GROUP_ZOMBIE_APOCALPSE_GROUP_ID)
 
-        group_data = groupService.get_group_data(group.group_id)
+        group_data = groupService.get_group_detail(group.group_id)
         print("group_data=" + str(group_data))
         print("group_data.group=" + str(group_data.group))
         for m in group_data.active_members:

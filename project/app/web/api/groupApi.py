@@ -10,6 +10,7 @@ from project.app.services import groupService
 from project.app.web.utils import serializeUtils
 from project.app.web import oauth2
 from project.app import main
+from project.app.web.schemas.groupSchemas import GroupSchema, PersonSchema
 
 api = Blueprint('group_api', __name__)
 
@@ -20,7 +21,7 @@ def get_public_groups():
     groups = groupService.get_groups()
     group_list = []
     for g in groups:
-        group_list.append(serializeUtils.serialize_group(g))
+        group_list.append(GroupSchema().dump(g))
 
     resp = serializeUtils.generate_response_wrapper(group_list)
     return jsonify(resp)
@@ -32,7 +33,7 @@ def get_groups():
     groups = groupService.get_groups()
     group_list = []
     for g in groups:
-        group_list.append(serializeUtils.serialize_group(g))
+        group_list.append(GroupSchema().dump(g))
 
     resp = serializeUtils.generate_response_wrapper(group_list)
     return jsonify(resp)
@@ -43,7 +44,7 @@ def get_groups():
 def get_public_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
-        data = serializeUtils.serialize_group(current_group)
+        data = GroupSchema().dump(current_group)
         resp = serializeUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
@@ -221,7 +222,7 @@ def _get_external_user_info_list(user_uuid_list, bearer_token):
 def get_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
-        data = serializeUtils.serialize_group(current_group)
+        data = GroupSchema().dump(current_group)
         resp = serializeUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
@@ -239,6 +240,6 @@ def add_public_group():
 
     new_group = groupService.add_group(group_name)
 
-    data = serializeUtils.serialize_group(new_group)
+    data = GroupSchema().dump(new_group)
     resp = serializeUtils.generate_response_wrapper(data)
     return jsonify(resp), 201

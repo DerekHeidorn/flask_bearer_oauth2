@@ -6,7 +6,7 @@ from werkzeug.contrib.cache import SimpleCache
 
 from project.app.models.codetables.group import CtGroupTypes
 from project.app.services import codetablesService
-from project.app.web.utils import serializeUtils
+from project.app.web.schemas.generalSchemas import CodeTableSchema
 
 api = Blueprint('codetables_api', __name__)
 
@@ -29,7 +29,7 @@ def codetable_by_name(codetable_name):
 
         else:
             codetable_data = codetablesService.get_code_table(allowed_codetable)
-            data = serializeUtils.serialize_codetable(codetable_data)
+            data = CodeTableSchema().dump(codetable_data, many=True)
             print("codetableData=" + str(data))
             if data:
                 codetable_cache.add(codetable_name, data)
