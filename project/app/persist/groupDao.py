@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy import func, or_, and_
 
 from project.app.models.group import Group, Person, Membership, GroupManager
@@ -166,6 +167,14 @@ def get_group_manager(group_id, person_id, session=None):
     return member
 
 
+def get_person_by_id(person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    person = session.query(Person).filter(Person.person_id == person_id).first()
+    return person
+
+
 def get_person_by_uuid(user_uuid, session=None):
     if session is None:
         session = baseDao.get_session()
@@ -198,3 +207,55 @@ def get_active_group_managers(group_id, session=None):
         .all()
 
     return managers
+
+
+def add_person(new_person, session=None):
+    """
+    Creates and saves a new person to the database.
+
+    :param new_person: new person record
+    :param session: database session
+
+    """
+    if session is None:
+        session = baseDao.get_session()
+
+    session.add(new_person)
+    session.commit()
+
+    return new_person
+
+
+def add_group_manager(group_id, person, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    group_manager = GroupManager()
+    group_manager.group_id = group_id
+
+    group_manager.from_ts = datetime.now()
+    group_manager.person_id = person.person_id
+    group_manager.person = person
+
+    session.add(group_manager)
+    session.commit()
+
+    return group_manager
+
+
+def add_group_member(group_id, person, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    group_membership = Membership()
+    group_membership.group_id = group_id
+
+    group_membership.from_ts = datetime.now()
+    group_membership.person_id = person.person_id
+    group_membership.person = person
+
+    session.add(group_membership)
+    session.commit()
+
+    return group_membership
+
