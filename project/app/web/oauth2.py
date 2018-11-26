@@ -55,7 +55,7 @@ class _BearerTokenValidator(BearerTokenValidator):
         print("_BearerTokenValidator->payload:" + str(payload))
 
         token = _OAuth2TokenMixin()
-        token.scope = payload['auth']
+        token.scope = payload['authorities']
         token.expires_in = payload['exp'] - payload['iat']
         token.expires_at = payload['exp']
 
