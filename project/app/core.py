@@ -101,7 +101,8 @@ def create_application():
                         "Accept-Language", "Content-Language", "Authorization", "If-Modified-Since"],
          expose_headers=["Content-Disposition"],
          methods=["OPTIONS", "POST", "PUT", "GET", "DELETE"],
-         origins=["http://127.0.0.1:4200", "http://localhost:4200", "http://127.0.0.1:9000", "http://127.0.0.1:9001"],
+         origins=["http://127.0.0.1:4200", "http://localhost:4200",
+                  "http://127.0.0.1:9000", "http://127.0.0.1:9001", "http://127.0.0.1:9002"],
          max_age=1800)
     # CORS(app, resources=r"/api/*")
     # CORS(app)
