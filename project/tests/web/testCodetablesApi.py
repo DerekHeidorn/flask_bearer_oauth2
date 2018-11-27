@@ -4,7 +4,7 @@ import json
 from project.tests.web.baseTest import BaseTest 
 
 
-class CodetableTestCases(BaseTest):
+class CodetablesApiTestCases(BaseTest):
 
     def test_CtGroupTypes_OK(self):
         print("Running: test_CtGroupTypes_OK")

@@ -19,10 +19,8 @@ def serialize_membership(membership, user_info=None):
 
     d = dict()
     if user_info is not None:
-        if 'first_name' in user_info:
-            d['first_name'] = user_info['first_name']
-        if 'last_name' in user_info:
-            d['last_name'] = user_info['last_name']
+        if 'alias' in user_info:
+            d['alias'] = user_info['alias']
 
     d['user_uuid'] = membership.person.user_uuid
     d['nick_name'] = membership.person.nick_name
@@ -36,10 +34,8 @@ def serialize_manager(manager, user_info=None):
 
     d = dict()
     if user_info is not None:
-        if 'first_name' in user_info:
-            d['first_name'] = user_info['first_name']
-        if 'last_name' in user_info:
-            d['last_name'] = user_info['last_name']
+        if 'alias' in user_info:
+            d['alias'] = user_info['alias']
 
     d['user_uuid'] = manager.person.user_uuid
     d['nick_name'] = manager.person.nick_name
@@ -64,8 +60,7 @@ def serialize_group_detail(group_details, user_info=None):
         if user is not None:
             active_members.append({"user_uuid": str(m.person.user_uuid),
                                    "nick_name": m.person.nick_name,
-                                   "first_name": user['first_name'],
-                                   "last_name": user['last_name']})
+                                   "alias": user['alias']})
         else:
             active_members.append(PersonSchema().dump(m.person))
 
@@ -80,8 +75,7 @@ def serialize_group_detail(group_details, user_info=None):
         if user is not None:
             active_managers.append({"user_uuid": str(m.person.user_uuid),
                                     "nick_name": m.person.nick_name,
-                                    "first_name": user['first_name'],
-                                    "last_name": user['last_name']})
+                                    "alias": user['alias']})
         else:
             active_managers.append(PersonSchema().dump(m.person))
 

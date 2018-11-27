@@ -5,7 +5,7 @@ from project.tests.utils import randomUtil
 from project.tests.helpers import commonHelper
 
 
-class GroupServiceTestCase(BaseTest):
+class GroupApiTestCase(BaseTest):
 
     def create_group(self, staff_info):
         self.assertIsNotNone(staff_info)
