@@ -24,6 +24,7 @@ def setup_dev_settings():
     # Application specific
     os.environ["APP_MODE"] = "dev"  # dev, test, or prod
     os.environ["APP_SECRET_KEY"] = "KlkdZyb5xrGpDcNkSBrDhe790ohLfuea"
+    os.environ["APP_SHARED_SECRET_KEY"] = "MD7VBOYXMQxa2BvtLwu9PtBTuqbKGlJ9TIcB0n9M"
     os.environ["APP_FLASK_SECRET_KEY"] = "wbr59q8tof3k2FfeSIvO"
 
     os.environ["APP_JWT_ISS"] = "https://localhost:9000"
@@ -75,8 +76,8 @@ def _generate_jwt_token(user_uuid):
 
 def _get_authorities(user_uuid):
     if DEFAULT_PUBLIC_UUID == user_uuid:
-        return ['CUST_ACCESS', 'CUST_PROFILE']
+        return ['CUST_ACCESS', 'GRP_ACCESS', 'RPT_ACCESS']
     elif DEFAULT_ADMIN_UUID == user_uuid:
-        return ['STAFF_ACCESS', 'BATCH', 'SYSTEM']
+        return ['ADM_ACCESS', 'GRP_ACCESS', 'GRP_ADMIN', 'RPT_ACCESS', 'BATCH_ACCESS', 'SYSTEM_ACCESS']
     else:
         return None

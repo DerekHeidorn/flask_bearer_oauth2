@@ -52,7 +52,8 @@ def create_application():
         "APP_JWT_KEY",
         "APP_DB_CONNECTION_URI",
         "APP_DB_ENGINE_DEBUG",
-        "APP_MODE"
+        "APP_MODE",
+        "APP_SHARED_SECRET_KEY"
     ]
 
     for r in required_os_environment_settings:
@@ -69,6 +70,7 @@ def create_application():
     # load keys and DB config globally
     set_global_config_item("APP_MODE", os.environ["APP_MODE"])
     set_global_config_item("APP_SECRET_KEY", os.environ["APP_SECRET_KEY"])
+    set_global_config_item("APP_SHARED_SECRET_KEY", os.environ["APP_SHARED_SECRET_KEY"])
     set_global_config_item("APP_JWT_KEY", os.environ["APP_JWT_KEY"])
     set_global_config_item("APP_FLASK_SECRET_KEY", os.environ["APP_FLASK_SECRET_KEY"])
     set_global_config_item("APP_DB_CONNECTION_URI", os.environ["APP_DB_CONNECTION_URI"])

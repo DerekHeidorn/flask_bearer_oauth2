@@ -46,6 +46,9 @@ def get_groups():
     return groupDao.get_groups()
 
 
+def get_groups_by_user_uuid(user_uuid):
+    return groupDao.get_groups_by_user_uuid(user_uuid)
+
 def get_group_by_id(group_id):
     return groupDao.get_group_by_id(group_id)
 

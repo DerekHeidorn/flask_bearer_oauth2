@@ -12,11 +12,29 @@ from project.app.web import oauth2
 from project.app import core
 from project.app.web.schemas.groupSchemas import GroupSchema
 
+
 api = Blueprint('group_api', __name__)
 
 
+@api.route('/api/v1.0/my/groups', methods=['GET'])
+@oauth2.require_oauth('GRP_ACCESS')
+def get_my_public_groups():
+    if current_token is not None and current_token.user_uuid is not None:
+
+        user_uuid = current_token.user_uuid;
+
+        groups = groupService.get_groups_by_user_uuid(user_uuid)
+        group_list = []
+        for g in groups:
+            group_list.append(GroupSchema().dump(g))
+
+        resp = serializeUtils.generate_response_wrapper(group_list)
+        return jsonify(resp)
+    abort(403)
+
+
 @api.route('/api/v1.0/public/group', methods=['GET'])
-@oauth2.require_oauth('CUST_ACCESS')
+@oauth2.require_oauth('GRP_ACCESS')
 def get_public_groups():
     groups = groupService.get_groups()
     group_list = []
@@ -28,7 +46,7 @@ def get_public_groups():
 
 
 @api.route('/api/v1.0/admin/group', methods=['GET'])
-@oauth2.require_oauth('STAFF_ACCESS')
+@oauth2.require_oauth('GRP_ADMIN')
 def get_groups():
     groups = groupService.get_groups()
     group_list = []
@@ -40,7 +58,7 @@ def get_groups():
 
 
 @api.route('/api/v1.0/public/group/<group_uuid>', methods=['GET'])
-@oauth2.require_oauth('CUST_ACCESS')
+@oauth2.require_oauth('GRP_ACCESS')
 def get_public_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
@@ -56,7 +74,7 @@ def get_public_group_by_uuid(group_uuid):
 
 
 @api.route('/api/v1.0/public/group/<group_uuid>/member/detail/<member_uuid>', methods=['GET'])
-@oauth2.require_oauth('CUST_ACCESS')
+@oauth2.require_oauth('GRP_ACCESS')
 def get_public_membership_detail_by_uuid(group_uuid, member_uuid):
 
     # member_uuid is the user_uuid
@@ -85,7 +103,7 @@ def get_public_membership_detail_by_uuid(group_uuid, member_uuid):
 
 
 @api.route('/api/v1.0/public/group/<group_uuid>/manager/detail/<manager_uuid>', methods=['GET'])
-@oauth2.require_oauth('CUST_ACCESS')
+@oauth2.require_oauth('GRP_ACCESS')
 def get_public_manager_detail_by_uuid(group_uuid, manager_uuid):
 
     # manager_uuid is the user_uuid
@@ -114,7 +132,7 @@ def get_public_manager_detail_by_uuid(group_uuid, manager_uuid):
 
 
 @api.route('/api/v1.0/public/group/detail/<group_uuid>', methods=['GET'])
-@oauth2.require_oauth('CUST_ACCESS')
+@oauth2.require_oauth('GRP_ACCESS')
 def get_public_group_detail_by_uuid(group_uuid):
     group_details = groupService.get_group_detail_by_uuid(group_uuid)
     core.logger.debug("group_details=" + str(group_details))
@@ -218,7 +236,7 @@ def _get_external_user_info_list(user_uuid_list, bearer_token):
 
 
 @api.route('/api/v1.0/admin/group/<group_uuid>', methods=['GET'])
-@oauth2.require_oauth('STAFF_ACCESS')
+@oauth2.require_oauth('GRP_ADMIN')
 def get_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
@@ -234,7 +252,7 @@ def get_group_by_uuid(group_uuid):
 
 
 @api.route('/api/v1.0/admin/group', methods=['POST'])
-@oauth2.require_oauth('STAFF_ACCESS')
+@oauth2.require_oauth('GRP_ADMIN')
 def add_public_group():
     group_name = request.form["group_name"]
     group_de = request.form["group_de"]

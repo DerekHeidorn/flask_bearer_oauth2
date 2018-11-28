@@ -8,6 +8,7 @@ from project.app.web.utils import authUtils
 
 class _OAuth2TokenMixin(TokenMixin):
 
+    user_uuid = None
     scope = None
     expires_in = None
     expires_at = None
@@ -55,6 +56,7 @@ class _BearerTokenValidator(BearerTokenValidator):
         print("_BearerTokenValidator->payload:" + str(payload))
 
         token = _OAuth2TokenMixin()
+        token.user_uuid = payload['sub']
         token.scope = payload['authorities']
         token.expires_in = payload['exp'] - payload['iat']
         token.expires_at = payload['exp']

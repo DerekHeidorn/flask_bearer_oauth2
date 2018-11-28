@@ -37,6 +37,49 @@ def get_groups(session=None):
     return all_groups
 
 
+def get_groups_by_user_uuid(user_uuid, session=None):
+    """
+    Get all groups, order by Group Name
+    :param user_uuid: user UUID
+    :param session: existing db session
+    :return: groups.
+    """
+    if session is None:
+        session = baseDao.get_session()
+
+    group_ids = []
+
+    membership_group_ids = session.query(Membership.group_id) \
+                            .join(Membership.person) \
+                                .filter(and_(Person.user_uuid == user_uuid,
+                                             Membership.from_ts <= func.current_timestamp()),
+                                         or_(Membership.to_ts.is_(None),
+                                             Membership.to_ts >= func.current_timestamp()))\
+                            .all()
+
+    manager_group_ids = session.query(GroupManager.group_id) \
+                            .join(GroupManager.person) \
+                                .filter(and_(Person.user_uuid == user_uuid,
+                                             GroupManager.from_ts <= func.current_timestamp()),
+                                         or_(GroupManager.to_ts.is_(None),
+                                             GroupManager.to_ts >= func.current_timestamp()))\
+                            .all()
+
+    if membership_group_ids is not None:
+        for i in membership_group_ids:
+            group_ids.append(i)
+
+    if manager_group_ids is not None:
+        for i in manager_group_ids:
+            group_ids.append(i)
+
+    all_groups = session.query(Group) \
+        .filter(Group.group_id.in_(group_ids)) \
+        .all()
+
+    return all_groups
+
+
 def get_group_by_id(group_id, session=None):
     """
     Gets the Group based on the id parameter
