@@ -43,8 +43,8 @@ class GroupServiceTestCase(BaseTest):
             print("active_managers=" + str(m))
 
         self.assertEqual(group_data.group.group_name, group.group_name)
-        self.assertEqual(len(group_data.active_members), 0)
-        self.assertEqual(len(group_data.active_managers), 0)
+        self.assertEqual(len(group_data.active_members), 2)
+        self.assertEqual(len(group_data.active_managers), 1)
 
     def test_get_group_data_zombie(self):
         print("running test_get_group_data...")

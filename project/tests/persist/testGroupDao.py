@@ -21,6 +21,7 @@ class GroupDaoTestCase(BaseTest):
         g = Group()
         g.group_uuid = uuid.uuid4()
         g.group_name = "Group_" + randomUtil.random_string(10, 10)
+        g.group_de = "Group Description: " + randomUtil.random_string(10, 10)
         g.group_type_cd = 'SP'
         new_group = groupDao.add_group(g)
         self.assertTrue(new_group.group_id > 0)
@@ -47,6 +48,7 @@ class GroupDaoTestCase(BaseTest):
         g = Group()
         g.group_uuid = uuid.uuid4()
         g.group_name = "Group_" + randomUtil.random_string(10, 10)
+        g.group_de = "Group Description: " + randomUtil.random_string(10, 10)
         g.group_type_cd = 'SP'
         new_group = groupDao.add_group(g)
 
