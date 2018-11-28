@@ -6,8 +6,8 @@ ALTER SEQUENCE public.tb_person_person_id_seq RESTART WITH 500;
 
 -- ========================================================================================================
 INSERT INTO public.tb_group(
-            group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (1, 'fbaa6765-bf50-40a8-bb29-a32ce07ef3d9', 'SP', 'The Avengers Group');
+            group_id, group_uuid, grptyp_cd, group_name, group_de)
+    VALUES (1, 'fbaa6765-bf50-40a8-bb29-a32ce07ef3d9', 'SP', 'The Avengers Group', 'A group of super heroes to help save the world!');
 -- 4e5d14ab-e91e-49b3-9c61-795748c41e09		Iron Man					Tony Stark
 INSERT INTO public.tb_person(
 	person_id, user_uuid, nick_name)
@@ -89,8 +89,8 @@ INSERT INTO public.tb_membership(
 	
 -- ========================================================================================================
 INSERT INTO public.tb_group(
-            group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (2, '84a7c3e2-d810-4439-836c-94002d9f4b0b', 'SP', 'Brown Coats');
+            group_id, group_uuid, grptyp_cd, group_name, group_de)
+    VALUES (2, '84a7c3e2-d810-4439-836c-94002d9f4b0b', 'SP', 'Brown Coats', 'Browncoats were soldiers who fought for the Independent Planets, who lost to the Union of Allied Planets in the Unification War.');
 -- a10541a9-46f4-49ae-97f4-625bc92b5f7c		Malcolm Reynolds					Firefly
 INSERT INTO public.tb_person(
 	person_id, user_uuid, nick_name)
@@ -157,13 +157,13 @@ INSERT INTO public.tb_membership(
 
 -- ========================================================================================================	
 INSERT INTO public.tb_group(
-            group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (3, 'c574ec5b-8a51-4eb5-b4a2-ba84fa27a85a', 'FI', 'Fitness Pal Members');
+            group_id, group_uuid, grptyp_cd, group_name, group_de)
+    VALUES (3, 'c574ec5b-8a51-4eb5-b4a2-ba84fa27a85a', 'FI', 'Fitness Pal Members', 'Members of the website');
 
 -- ========================================================================================================
 INSERT INTO public.tb_group(
-            group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (4, '91a94eb2-3412-4a0e-b84b-645e1451830e', 'SP', 'Zombie Apocalypse Preparation Group');
+            group_id, group_uuid, grptyp_cd, group_name, group_de)
+    VALUES (4, '91a94eb2-3412-4a0e-b84b-645e1451830e', 'SP', 'Zombie Apocalypse Preparation Group', 'A group planning on getting ready for the zombie Apocalypse.');
 
 -- 121461d4-a78b-4bbb-9471-9cf8233fdc78		Janus Prospero (Alice)				Resident Evil
 INSERT INTO public.tb_person(
@@ -224,8 +224,28 @@ INSERT INTO public.tb_membership(
 	
 -- ========================================================================================================	
 INSERT INTO public.tb_group(
-            group_id, group_uuid, grptyp_cd, group_name)
-    VALUES (5, '00b2c66d-35b0-48ac-8039-31e67c7bc34c', 'FI', 'Company ABC Workout Group');
+            group_id, group_uuid, grptyp_cd, group_name, group_de)
+    VALUES (5, '00b2c66d-35b0-48ac-8039-31e67c7bc34c', 'FI', 'Company ABC Workout Group', 'Employees interesting in fitness and health.');
 
-
+-- d71b920a-04a9-44d3-beda-a736601a64c5', 'Joe.Group.Subscribed@foo.com.invali
+INSERT INTO public.tb_person(
+	person_id, user_uuid, nick_name)
+	VALUES (50, 'd71b920a-04a9-44d3-beda-a736601a64c5', 'Joe.Group');
+INSERT INTO public.tb_group_manager(
+	manager_id, group_id, person_id, manager_from_ts, manager_to_ts)
+	VALUES (50, 5, 50, CURRENT_DATE-2, null);
+-- 14468f27-44e8-4fc3-8cc6-3a48c80fd5aa', 'Joe.Subscribed@foo.com.invali
+INSERT INTO public.tb_person(
+	person_id, user_uuid, nick_name)
+	VALUES (51, '14468f27-44e8-4fc3-8cc6-3a48c80fd5aa', 'Joe.Subscribed');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts, membership_to_ts)
+	VALUES (51, 5, 51, CURRENT_DATE-2, null);
+-- c95802ac-e465-11e8-9f32-f2801f1b9fd1', 'Joe.Customer@foo.com.invali
+INSERT INTO public.tb_person(
+	person_id, user_uuid, nick_name)
+	VALUES (52, 'c95802ac-e465-11e8-9f32-f2801f1b9fd1', 'Joe.Customer');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts, membership_to_ts)
+	VALUES (52, 5, 52, CURRENT_DATE-2, null);
 	

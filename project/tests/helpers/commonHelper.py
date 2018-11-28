@@ -39,7 +39,8 @@ def setup_dev_settings():
 def create_public_group():
 
     group_name = "Group_" + randomUtil.random_string(6, 18)
-    new_group = groupService.add_group(group_name)
+    group_de = 'Some random description'
+    new_group = groupService.add_group(group_name, group_de)
 
     return new_group
 

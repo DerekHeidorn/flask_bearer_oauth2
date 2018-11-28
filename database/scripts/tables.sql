@@ -30,7 +30,8 @@ CREATE TABLE public.TB_GROUP (
   GROUP_ID serial NOT NULL, -- System-generated ID for a Group.
   GROUP_UUID uuid NOT NULL,
   GRPTYP_CD character varying(2) NOT NULL,
-  GROUP_NAME character varying(100) NOT NULL, 
+  GROUP_NAME character varying(100) NOT NULL,
+  GROUP_DE character varying(1000) NOT NULL,
   CONSTRAINT PKTB_GROUP PRIMARY KEY (GROUP_ID),
   CONSTRAINT TB_GROUP_TO_TB_GROUP_TYP_CD FOREIGN KEY (GRPTYP_CD) REFERENCES public.TB_GROUP_TYP_CD (GRPTYP_CD)
 );

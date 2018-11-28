@@ -49,6 +49,9 @@ class Group(BaseModel):
     # GROUP_NAME		Last Name of the User
     group_name = Column("group_name", String(80))
 
+    # GROUP_NAME		Last Name of the User
+    group_de = Column("group_name", String(1000))
+
     def __repr__(self):
         return "<Group(group_name='%s')>" % self.group_name
 

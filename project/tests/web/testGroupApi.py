@@ -11,11 +11,13 @@ class GroupApiTestCase(BaseTest):
         self.assertIsNotNone(staff_info)
 
         new_group_name = "Group_" + randomUtil.random_string(10, 25)
+        new_group_de = "Random Group Description No. " + randomUtil.random_string(10, 25)
 
         resp = self.testClient.post('/api/v1.0/admin/group',
                                     headers={"Authorization": "bearer " + staff_info['token']},
                                     data=dict(
-                                                group_name=new_group_name
+                                                group_name=new_group_name,
+                                                group_de=new_group_de
                                              )
                                     )
         self.debug_response(resp)
@@ -29,10 +31,12 @@ class GroupApiTestCase(BaseTest):
         staff_info = commonHelper.get_default_staff()
 
         new_group_name = "Group_" + randomUtil.random_string(10, 25)
+        new_group_de = "Random Group Description No. " + randomUtil.random_string(10, 25)
         resp = self.testClient.post('/api/v1.0/admin/group',
                                     headers={"Authorization": "bearer " + staff_info['token']},
                                     data=dict(
-                                                group_name=new_group_name
+                                                group_name=new_group_name,
+                                                group_de=new_group_de
                                              )
                                     )
         self.debug_response(resp)

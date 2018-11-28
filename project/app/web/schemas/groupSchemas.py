@@ -4,6 +4,7 @@ from marshmallow import fields, Schema
 class GroupSchema(Schema):
     group_uuid = fields.String(required=True)
     group_name = fields.String(required=True)
+    group_de = fields.String(required=True)
 
 
 class PersonSchema(Schema):

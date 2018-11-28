@@ -62,10 +62,11 @@ def is_group_name_unique(group_name):
     return groupDao.is_group_name_unique(group_name)
 
 
-def add_group(group_name):
+def add_group(group_name, group_de):
     g = Group()
     g.group_uuid = uuid.uuid4()
     g.group_name = group_name
+    g.group_de = group_de
     g.group_type_cd = 'SP'
     return groupDao.add_group(g)
 

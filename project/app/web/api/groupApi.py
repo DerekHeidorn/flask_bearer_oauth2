@@ -10,7 +10,7 @@ from project.app.services import groupService
 from project.app.web.utils import serializeUtils
 from project.app.web import oauth2
 from project.app import core
-from project.app.web.schemas.groupSchemas import GroupSchema, PersonSchema
+from project.app.web.schemas.groupSchemas import GroupSchema
 
 api = Blueprint('group_api', __name__)
 
@@ -237,8 +237,9 @@ def get_group_by_uuid(group_uuid):
 @oauth2.require_oauth('STAFF_ACCESS')
 def add_public_group():
     group_name = request.form["group_name"]
+    group_de = request.form["group_de"]
 
-    new_group = groupService.add_group(group_name)
+    new_group = groupService.add_group(group_name, group_de)
 
     data = GroupSchema().dump(new_group)
     resp = serializeUtils.generate_response_wrapper(data)
