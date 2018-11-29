@@ -12,7 +12,6 @@ class GroupDaoTestCase(BaseTest):
     def create_person(self):
         p = Person()
         p.user_uuid = uuid.uuid4()
-        p.nick_name = "Nickname_" + randomUtil.random_string(10, 10)
         new_person = groupDao.add_person(p)
         self.assertTrue(new_person.person_id > 0)
 
@@ -42,7 +41,6 @@ class GroupDaoTestCase(BaseTest):
 
         p = Person()
         p.user_uuid = uuid.uuid4()
-        p.nick_name = "Nickname_" + randomUtil.random_string(10, 10)
         new_person = groupDao.add_person(p)
         self.assertTrue(new_person.person_id > 0)
 
@@ -53,6 +51,8 @@ class GroupDaoTestCase(BaseTest):
         g.group_name = "Group_" + randomUtil.random_string(10, 10)
         g.group_de = "Group Description: " + randomUtil.random_string(10, 10)
         g.group_type_cd = 'SP'
+        g.created_ts = datetime.now()
+        g.private_fl = False
         new_group = groupDao.add_group(g)
 
         self.assertTrue(new_group.group_id > 0)

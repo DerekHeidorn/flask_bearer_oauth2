@@ -1,7 +1,9 @@
 import uuid
+import traceback
 from datetime import datetime
-from project.app.models.group import Group
+from project.app.models.group import Group, Person
 from project.app.persist import groupDao, baseDao
+from project.app import core
 
 
 class GroupDetail:
@@ -94,3 +96,30 @@ def get_group_manager_by_uuid(group_uuid, person_uuid):
     person = groupDao.get_person_by_uuid(person_uuid, session)
 
     return groupDao.get_group_manager(group.group_id, person.person_id, session)
+
+
+def add_group_member(group_uuid, user_uuid):
+    session = baseDao.get_session()
+
+    group = groupDao.get_group_by_uuid(group_uuid, session)
+
+    if group:
+        if not group.private_fl:
+            try:
+                person = groupDao.get_person_by_uuid(user_uuid, session)
+                if person is None:
+                    person = Person()
+                    person.user_uuid = user_uuid
+                    person = groupDao.add_person(person, session)
+
+                group_membership = groupDao.add_group_member(group.group_id, person, session)
+                session.commit()
+                return group_membership
+            except Exception as e:
+                session.rollback()
+                raise
+        else:
+            raise Exception("Not a public group")
+    else:
+        raise Exception("Group Doesn't exist!")
+

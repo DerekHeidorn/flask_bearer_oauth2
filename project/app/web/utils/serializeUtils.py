@@ -23,7 +23,6 @@ def serialize_membership(membership, user_info=None):
             d['alias'] = user_info['alias']
 
     d['user_uuid'] = membership.person.user_uuid
-    d['nick_name'] = membership.person.nick_name
     d['membership_from_ts'] = str(membership.from_ts)
     d['membership_to_ts'] = str(membership.to_ts)
 
@@ -38,7 +37,6 @@ def serialize_manager(manager, user_info=None):
             d['alias'] = user_info['alias']
 
     d['user_uuid'] = manager.person.user_uuid
-    d['nick_name'] = manager.person.nick_name
     d['manager_from_ts'] = str(manager.from_ts)
     d['manager_to_ts'] = str(manager.to_ts)
 
@@ -59,7 +57,6 @@ def serialize_group_detail(group_details, user_info=None):
                     break
         if user is not None:
             active_members.append({"user_uuid": str(m.person.user_uuid),
-                                   "nick_name": m.person.nick_name,
                                    "alias": user['alias']})
         else:
             active_members.append(PersonSchema().dump(m.person))
@@ -74,7 +71,6 @@ def serialize_group_detail(group_details, user_info=None):
                     break
         if user is not None:
             active_managers.append({"user_uuid": str(m.person.user_uuid),
-                                    "nick_name": m.person.nick_name,
                                     "alias": user['alias']})
         else:
             active_managers.append(PersonSchema().dump(m.person))

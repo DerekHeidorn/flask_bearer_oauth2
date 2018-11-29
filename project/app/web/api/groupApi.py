@@ -10,7 +10,7 @@ from project.app.services import groupService
 from project.app.web.utils import serializeUtils
 from project.app.web import oauth2
 from project.app import core
-from project.app.web.schemas.groupSchemas import GroupSchema
+from project.app.web.schemas.groupSchemas import GroupSchema, MembershipSchema
 
 
 api = Blueprint('group_api', __name__)
@@ -21,7 +21,7 @@ api = Blueprint('group_api', __name__)
 def get_my_public_groups():
     if current_token is not None and current_token.user_uuid is not None:
 
-        user_uuid = current_token.user_uuid;
+        user_uuid = current_token.user_uuid
 
         groups = groupService.get_groups_by_user_uuid(user_uuid)
         group_list = []
@@ -31,6 +31,22 @@ def get_my_public_groups():
         resp = serializeUtils.generate_response_wrapper(group_list)
         return jsonify(resp)
     abort(403)
+
+
+@api.route('/api/v1.0/my/subscribe/group/<group_uuid>', methods=['post'])
+@oauth2.require_oauth('GRP_ACCESS')
+def subscribe_to_group(group_uuid):
+
+    if current_token is not None and current_token.user_uuid is not None:
+        user_uuid = current_token.user_uuid
+
+        group_membership = groupService.add_group_member(group_uuid, user_uuid)
+        data = MembershipSchema().dump(group_membership)
+
+        resp = serializeUtils.generate_response_wrapper(data)
+        return jsonify(resp), 201
+    else:
+        abort(403)
 
 
 @api.route('/api/v1.0/public/group', methods=['GET'])

@@ -301,4 +301,3 @@ def add_group_member(group_id, person, session=None):
     session.commit()
 
     return group_membership
-

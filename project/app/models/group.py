@@ -20,9 +20,6 @@ class Person(BaseModel):
     # USER_UUID
     user_uuid = Column("user_uuid", String(50))
 
-    # NICK_NAME		Last Name of the User
-    nick_name = Column("nick_name", String(80))
-
     def __repr__(self):
         return "<Person(user_uuid='%s')>" % self.user_uuid
 

@@ -84,6 +84,26 @@ class GroupApiTestCase(BaseTest):
         self.assertEqual(str(group.group_uuid), json_data['data']["group"]["group_uuid"])
         # self.assertEqual("Tester", user["firstName"])
 
+    def test_subscribe_to_group(self):
+        print("Running: test_subscribe_to_group")
+        user_info = commonHelper.get_default_public_user()
+        group = commonHelper.get_group(commonHelper.GROUP_THE_AVENGERS_GROUP_ID)
+
+        print("user_info['token']: " + str(user_info['token']))
+        print("group.group_uuid: " + str(group.group_uuid))
+
+        resp = self.testClient.post('/api/v1.0/my/subscribe/group/' + str(group.group_uuid),
+                                    headers={"Authorization": "bearer " + user_info['token']})
+
+        self.debug_response(resp)
+        self.assertEqual(201, resp.status_code)
+        json_data = json.loads(resp.data)
+        print("**group: " + str(json_data))
+
+        assert group is not None
+
+        self.assertTrue(json_data['data']["from_ts"] is not None)
+
 
 if __name__ == '__main__':
     unittest.main()

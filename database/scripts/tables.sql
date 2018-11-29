@@ -20,7 +20,6 @@ CREATE TABLE public.TB_GROUP_TYP_CD
 CREATE TABLE public.TB_PERSON (
 	PERSON_ID serial NOT NULL, -- System-generated ID for a Group.
     USER_UUID uuid NOT NULL,
-    NICK_NAME character varying(100) NOT NULL, 
     CONSTRAINT PKTB_PERSON PRIMARY KEY (PERSON_ID)
 );
   

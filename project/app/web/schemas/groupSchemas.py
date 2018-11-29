@@ -9,9 +9,8 @@ class GroupSchema(Schema):
 
 class PersonSchema(Schema):
     user_uuid = fields.String(required=True)
-    nick_name = fields.String(required=True)
 
 
 class MembershipSchema(Schema):
     user_uuid = fields.String(required=True)
-    nick_name = fields.String(required=True)
+    from_ts = fields.String()
