@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from project.tests.persist.baseTest import BaseTest
 from project.tests.helpers import commonHelper
 from project.tests.utils import randomUtil
@@ -23,6 +24,8 @@ class GroupDaoTestCase(BaseTest):
         g.group_name = "Group_" + randomUtil.random_string(10, 10)
         g.group_de = "Group Description: " + randomUtil.random_string(10, 10)
         g.group_type_cd = 'SP'
+        g.created_ts = datetime.now()
+        g.private_fl = False
         new_group = groupDao.add_group(g)
         self.assertTrue(new_group.group_id > 0)
 

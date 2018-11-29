@@ -30,6 +30,8 @@ CREATE TABLE public.TB_GROUP (
   GROUP_ID serial NOT NULL, -- System-generated ID for a Group.
   GROUP_UUID uuid NOT NULL,
   GRPTYP_CD character varying(2) NOT NULL,
+  GROUP_CREATED_TS timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  GROUP_PRIVATE_FL boolean NOT NULL DEFAULT TRUE,
   GROUP_NAME character varying(100) NOT NULL,
   GROUP_DE character varying(1000) NOT NULL,
   CONSTRAINT PKTB_GROUP PRIMARY KEY (GROUP_ID),

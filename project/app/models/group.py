@@ -1,6 +1,6 @@
 
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Table, MetaData
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean
+from sqlalchemy.orm import relationship
 
 from project.app.models.baseModel import BaseModel
 
@@ -45,6 +45,12 @@ class Group(BaseModel):
 
     # GRPTYP_CD
     group_type_cd = Column("grptyp_cd", String(2))
+
+    # group_private_fl
+    private_fl = Column("group_private_fl", Boolean())
+
+    # group_created_ts
+    created_ts = Column("group_created_ts", DateTime)
 
     # GROUP_NAME		Last Name of the User
     group_name = Column("group_name", String(80))

@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from project.app.models.group import Group
 from project.app.persist import groupDao, baseDao
 
@@ -49,6 +50,7 @@ def get_groups():
 def get_groups_by_user_uuid(user_uuid):
     return groupDao.get_groups_by_user_uuid(user_uuid)
 
+
 def get_group_by_id(group_id):
     return groupDao.get_group_by_id(group_id)
 
@@ -70,6 +72,8 @@ def add_group(group_name, group_de):
     g.group_uuid = uuid.uuid4()
     g.group_name = group_name
     g.group_de = group_de
+    g.created_ts = datetime.now()
+    g.private_fl = False
     g.group_type_cd = 'SP'
     return groupDao.add_group(g)
 
