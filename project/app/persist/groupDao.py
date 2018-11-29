@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import func, or_, and_
+from sqlalchemy import func, and_
 
 from project.app.models.group import Group, Person, Membership, GroupManager
 from project.app.persist import baseDao
@@ -50,20 +50,14 @@ def get_groups_by_user_uuid(user_uuid, session=None):
     group_ids = []
 
     membership_group_ids = session.query(Membership.group_id) \
-                            .join(Membership.person) \
-                                .filter(and_(Person.user_uuid == user_uuid,
-                                             Membership.from_ts <= func.current_timestamp()),
-                                         or_(Membership.to_ts.is_(None),
-                                             Membership.to_ts >= func.current_timestamp()))\
-                            .all()
+                                         .join(Membership.person) \
+                                         .filter(Person.user_uuid == user_uuid)\
+                                         .all()
 
     manager_group_ids = session.query(GroupManager.group_id) \
-                            .join(GroupManager.person) \
-                                .filter(and_(Person.user_uuid == user_uuid,
-                                             GroupManager.from_ts <= func.current_timestamp()),
-                                         or_(GroupManager.to_ts.is_(None),
-                                             GroupManager.to_ts >= func.current_timestamp()))\
-                            .all()
+                                      .join(GroupManager.person) \
+                                      .filter(Person.user_uuid == user_uuid)\
+                                      .all()
 
     if membership_group_ids is not None:
         for i in membership_group_ids:
@@ -231,9 +225,7 @@ def get_active_group_members(group_id, session=None):
         session = baseDao.get_session()
 
     members = session.query(Membership)\
-        .filter(and_(Membership.group_id == group_id,
-                     Membership.from_ts <= func.current_timestamp()),
-                or_(Membership.to_ts.is_(None), Membership.to_ts >= func.current_timestamp()))\
+        .filter(Membership.group_id == group_id)\
         .all()
 
     return members
@@ -244,9 +236,7 @@ def get_active_group_managers(group_id, session=None):
         session = baseDao.get_session()
 
     managers = session.query(GroupManager)\
-        .filter(GroupManager.group_id == group_id
-                and GroupManager.from_ts <= func.current_timestamp(),
-                or_(GroupManager.to_ts.is_(None), GroupManager.to_ts >= func.current_timestamp()))\
+        .filter(GroupManager.group_id == group_id)\
         .all()
 
     return managers

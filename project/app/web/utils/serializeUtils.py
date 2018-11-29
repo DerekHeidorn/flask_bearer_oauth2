@@ -24,7 +24,6 @@ def serialize_membership(membership, user_info=None):
 
     d['user_uuid'] = membership.person.user_uuid
     d['membership_from_ts'] = str(membership.from_ts)
-    d['membership_to_ts'] = str(membership.to_ts)
 
     return d
 
@@ -38,7 +37,6 @@ def serialize_manager(manager, user_info=None):
 
     d['user_uuid'] = manager.person.user_uuid
     d['manager_from_ts'] = str(manager.from_ts)
-    d['manager_to_ts'] = str(manager.to_ts)
 
     return d
 

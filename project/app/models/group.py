@@ -84,24 +84,34 @@ class Membership(BaseModel):
     # MEMBERSHIP_FROM_TS
     from_ts = Column("membership_from_ts", DateTime)
 
-    # MEMBERSHIP_TO_TS
-    to_ts = Column("membership_to_ts", DateTime)
-
     person = relationship("Person")
 
     def __repr__(self):
         return "<Membership(id='%s')>" % self.membership_id
 
-# CREATE TABLE general.TB_GROUP_MANAGER (
-# 	"MANAGER_ID" serial NOT NULL, -- System-generated ID for a Group.
-#     "GROUP_ID" integer NOT NULL,
-#     "PERSON_ID" integer NOT NULL,
-#     "MANAGER_FROM_TS" timestamp without time zone NOT NULL,
-# 	"MANAGER_TO_TS" timestamp without time zone NOT NULL,
-# 	CONSTRAINT "PKTB_GROUP_MANAGER" PRIMARY KEY ("MANAGER_ID"),
-# 	CONSTRAINT "TB_GROUP_MANAGER_TO_TB_PERSON" FOREIGN KEY ("PERSON_ID") REFERENCES general.TB_PERSON ("PERSON_ID"),
-# 	CONSTRAINT "TB_GROUP_MANAGER_TO_TB_GROUP" FOREIGN KEY ("GROUP_ID") REFERENCES general.TB_GROUP ("GROUP_ID")
-# );
+
+class MembershipHistory(BaseModel):
+    __tablename__ = 'tb_membership_history'
+
+    membership_history_id = Column("membership_history_id", Integer, primary_key=True)
+
+    # MEMBERSHIP_ID
+    membership_id = Column("membership_id", Integer)
+
+    # PERSON_ID
+    person_id = Column("person_id", Integer)
+
+    # GROUP_ID
+    group_id = Column("group_id", Integer)
+
+    # MEMBERSHIP_FROM_TS
+    from_ts = Column("membership_from_ts", DateTime)
+
+    # MEMBERSHIP_TO_TS
+    to_ts = Column("membership_to_ts", DateTime)
+
+    def __repr__(self):
+        return "<MembershipHistory(id='%s')>" % self.membership_id
 
 
 class GroupManager(BaseModel):
@@ -119,10 +129,31 @@ class GroupManager(BaseModel):
     # MANAGER_FROM_TS
     from_ts = Column("manager_from_ts", DateTime)
 
+    person = relationship("Person")
+
+    def __repr__(self):
+        return "<GroupManager(id='%s')>" % self.manager_id
+
+
+class GroupManagerHistory(BaseModel):
+    __tablename__ = 'tb_group_manager_history'
+
+    manager_history_id = Column("manager_history_id", Integer, primary_key=True)
+
+    # MEMBERSHIP_ID
+    manager_id = Column("manager_id", Integer)
+
+    # PERSON_ID
+    person_id = Column("person_id", Integer)
+
+    # GROUP_ID
+    group_id = Column("group_id", Integer)
+
+    # MANAGER_FROM_TS
+    from_ts = Column("manager_from_ts", DateTime)
+
     # MANAGER_TO_TS
     to_ts = Column("manager_to_ts", DateTime)
-
-    person = relationship("Person")
 
     def __repr__(self):
         return "<GroupManager(id='%s')>" % self.manager_id
