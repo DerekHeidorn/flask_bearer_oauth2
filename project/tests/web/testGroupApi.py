@@ -62,7 +62,6 @@ class GroupApiTestCase(BaseTest):
         self.assertEqual(group_uuid, group["data"]["group_uuid"])
         # self.assertEqual("Tester", user["firstName"])
 
-# /api/v1.0/public/group/detail/<group_uuid>
     def test_get_public_group_detail_by_uuid(self):
         print("Running: test_get_public_group_detail_by_uuid")
         user_info = commonHelper.get_default_public_user()
@@ -89,10 +88,21 @@ class GroupApiTestCase(BaseTest):
         user_info = commonHelper.get_default_public_user()
         group = commonHelper.get_group(commonHelper.GROUP_THE_AVENGERS_GROUP_ID)
 
+        resp = self.testClient.get('/api/v1.0/public/group/' + str(group.group_uuid),
+                                   headers={"Authorization": "bearer " + user_info['token']})
+
+        self.debug_response(resp)
+        self.assertEqual(200, resp.status_code)
+
+        response_data = json.loads(resp.data)
+        group_uuid_digest = response_data["data"]["group_uuid_digest"]
+        print("group_uuid_digest: " + group_uuid_digest)
+        self.assertIsNotNone(group_uuid_digest)
+
         print("user_info['token']: " + str(user_info['token']))
         print("group.group_uuid: " + str(group.group_uuid))
 
-        resp = self.testClient.post('/api/v1.0/my/subscribe/group/' + str(group.group_uuid),
+        resp = self.testClient.post('/api/v1.0/my/subscribe/group/' + str(group.group_uuid) + "/" + group_uuid_digest,
                                     headers={"Authorization": "bearer " + user_info['token']})
 
         self.debug_response(resp)
@@ -103,6 +113,45 @@ class GroupApiTestCase(BaseTest):
         assert group is not None
 
         self.assertTrue(json_data['data']["from_ts"] is not None)
+
+    def test_unsubscribe_to_group(self):
+        print("Running: test_subscribe_to_group")
+        user_info = commonHelper.get_default_public_user()
+        group = commonHelper.get_group(commonHelper.GROUP_THE_AVENGERS_GROUP_ID)
+
+        resp = self.testClient.get('/api/v1.0/public/group/' + str(group.group_uuid),
+                                   headers={"Authorization": "bearer " + user_info['token']})
+
+        self.debug_response(resp)
+        self.assertEqual(200, resp.status_code)
+
+        response_data = json.loads(resp.data)
+        group_uuid_digest = response_data["data"]["group_uuid_digest"]
+        print("group_uuid_digest: " + group_uuid_digest)
+        self.assertIsNotNone(group_uuid_digest)
+
+        print("user_info['token']: " + str(user_info['token']))
+        print("group.group_uuid: " + str(group.group_uuid))
+
+        resp = self.testClient.post('/api/v1.0/my/subscribe/group/' + str(group.group_uuid) + "/" + group_uuid_digest,
+                                    headers={"Authorization": "bearer " + user_info['token']})
+
+        self.debug_response(resp)
+        self.assertEqual(201, resp.status_code)
+        json_data = json.loads(resp.data)
+        print("**group: " + str(json_data))
+
+        assert group is not None
+
+        self.assertTrue(json_data['data']["from_ts"] is not None)
+
+        resp = self.testClient.post('/api/v1.0/my/unsubscribe/group/' + str(group.group_uuid) + "/" + group_uuid_digest,
+                                    headers={"Authorization": "bearer " + user_info['token']})
+
+        self.debug_response(resp)
+        self.assertEqual(201, resp.status_code)
+        json_data = json.loads(resp.data)
+        print("**group: " + str(json_data))
 
 
 if __name__ == '__main__':

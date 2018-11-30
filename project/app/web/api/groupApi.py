@@ -7,6 +7,7 @@ from flask import abort
 from authlib.flask.oauth2 import current_token
 
 from project.app.services import groupService
+from project.app.services.utils import sha256
 from project.app.web.utils import serializeUtils
 from project.app.web import oauth2
 from project.app import core
@@ -33,18 +34,44 @@ def get_my_public_groups():
     abort(403)
 
 
-@api.route('/api/v1.0/my/subscribe/group/<group_uuid>', methods=['post'])
+@api.route('/api/v1.0/my/subscribe/group/<group_uuid>/<group_digest>', methods=['post'])
 @oauth2.require_oauth('GRP_ACCESS')
-def subscribe_to_group(group_uuid):
+def subscribe_to_group(group_uuid, group_digest):
 
     if current_token is not None and current_token.user_uuid is not None:
         user_uuid = current_token.user_uuid
 
-        group_membership = groupService.add_group_member(group_uuid, user_uuid)
-        data = MembershipSchema().dump(group_membership)
+        digest_to_compare = sha256.hexdigest(group_uuid)
 
-        resp = serializeUtils.generate_response_wrapper(data)
-        return jsonify(resp), 201
+        if digest_to_compare == group_digest:
+            group_membership = groupService.add_group_membership(group_uuid, user_uuid)
+            data = MembershipSchema().dump(group_membership)
+
+            resp = serializeUtils.generate_response_wrapper(data)
+            return jsonify(resp), 201
+        else:
+            abort(403)
+    else:
+        abort(403)
+
+
+@api.route('/api/v1.0/my/unsubscribe/group/<group_uuid>/<group_digest>', methods=['post'])
+@oauth2.require_oauth('GRP_ACCESS')
+def unsubscribe_to_group(group_uuid, group_digest):
+
+    if current_token is not None and current_token.user_uuid is not None:
+        user_uuid = current_token.user_uuid
+
+        digest_to_compare = sha256.hexdigest(group_uuid)
+
+        if digest_to_compare == group_digest:
+            group_membership = groupService.remove_group_membership(group_uuid, user_uuid)
+            data = MembershipSchema().dump(group_membership)
+
+            resp = serializeUtils.generate_response_wrapper(data)
+            return jsonify(resp), 201
+        else:
+            abort(403)
     else:
         abort(403)
 
@@ -52,7 +79,7 @@ def subscribe_to_group(group_uuid):
 @api.route('/api/v1.0/public/group', methods=['GET'])
 @oauth2.require_oauth('GRP_ACCESS')
 def get_public_groups():
-    groups = groupService.get_groups()
+    groups = groupService.get_public_groups()
     group_list = []
     for g in groups:
         group_list.append(GroupSchema().dump(g))
@@ -76,9 +103,9 @@ def get_groups():
 @api.route('/api/v1.0/public/group/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('GRP_ACCESS')
 def get_public_group_by_uuid(group_uuid):
-    current_group = groupService.get_group_by_uuid(group_uuid)
-    if current_group:
-        data = GroupSchema().dump(current_group)
+    group = groupService.get_group_by_uuid(group_uuid, False)
+    if group:
+        data = GroupSchema().dump(group)
         resp = serializeUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
@@ -150,7 +177,7 @@ def get_public_manager_detail_by_uuid(group_uuid, manager_uuid):
 @api.route('/api/v1.0/public/group/detail/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('GRP_ACCESS')
 def get_public_group_detail_by_uuid(group_uuid):
-    group_details = groupService.get_group_detail_by_uuid(group_uuid)
+    group_details = groupService.get_group_detail_by_uuid(group_uuid, False)
     core.logger.debug("group_details=" + str(group_details))
 
     if group_details:

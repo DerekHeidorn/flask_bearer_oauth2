@@ -79,7 +79,7 @@ class GroupDaoTestCase(BaseTest):
         session = baseDao.get_session()
 
         manager = groupDao.get_person_by_id(member.person_id, session)
-        group_membership = groupDao.add_group_member(group.group_id, manager, session)
+        group_membership = groupDao.add_group_membership(group.group_id, manager, session)
 
         self.assertEqual(group.group_id, group_membership.group_id)
         self.assertEqual(manager.person_id, group_membership.person_id)

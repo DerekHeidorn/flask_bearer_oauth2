@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import func, and_
 
-from project.app.models.group import Group, Person, Membership, GroupManager
+from project.app.models.group import Group, Person, Membership, GroupManager, MembershipHistory, GroupManagerHistory
 from project.app.persist import baseDao
 
 
@@ -20,6 +20,27 @@ def add_group(new_group, session=None):
     session.commit()
 
     return new_group
+
+
+def get_groups_by_filter(is_private_fl, session=None):
+    """
+    Get all groups, order by Group Name
+
+    :param is_private_fl: filter on private group flag
+    :param session: existing db session
+    :return: groups.
+    """
+    if session is None:
+        session = baseDao.get_session()
+
+    if is_private_fl is not None:
+        all_groups = session.query(Group) \
+            .filter(Group.private_fl == is_private_fl) \
+            .order_by(Group.group_name).all()
+    else:
+        all_groups = get_groups()
+
+    return all_groups
 
 
 def get_groups(session=None):
@@ -50,14 +71,14 @@ def get_groups_by_user_uuid(user_uuid, session=None):
     group_ids = []
 
     membership_group_ids = session.query(Membership.group_id) \
-                                         .join(Membership.person) \
-                                         .filter(Person.user_uuid == user_uuid)\
-                                         .all()
+        .join(Membership.person) \
+        .filter(Person.user_uuid == user_uuid) \
+        .all()
 
     manager_group_ids = session.query(GroupManager.group_id) \
-                                      .join(GroupManager.person) \
-                                      .filter(Person.user_uuid == user_uuid)\
-                                      .all()
+        .join(GroupManager.person) \
+        .filter(Person.user_uuid == user_uuid) \
+        .all()
 
     if membership_group_ids is not None:
         for i in membership_group_ids:
@@ -89,18 +110,22 @@ def get_group_by_id(group_id, session=None):
     return group
 
 
-def get_group_by_uuid(group_uuid, session=None):
+def get_group_by_uuid(group_uuid, is_private_fl=None, session=None):
     """
     Gets the Group based on the id parameter
 
     :param group_uuid: The uuid of the group which needs to be loaded
+    :param is_private_fl: whether to query the group is private or not
     :param session: existing db session
     :return: The Group.
     """
     if session is None:
         session = baseDao.get_session()
 
-    group = session.query(Group).filter(Group.group_uuid == group_uuid).first()
+    filters = {'group_uuid': group_uuid}
+    if is_private_fl is not None:
+        filters["private_fl"] = is_private_fl
+    group = session.query(Group).filter_by(**filters).first()
     return group
 
 
@@ -231,6 +256,18 @@ def get_active_group_members(group_id, session=None):
     return members
 
 
+def get_membership_by_ids(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    membership = session.query(Membership)\
+        .filter(Membership.group_id == group_id,
+                Membership.person_id == person_id)\
+        .first()
+
+    return membership
+
+
 def get_active_group_managers(group_id, session=None):
     if session is None:
         session = baseDao.get_session()
@@ -240,6 +277,18 @@ def get_active_group_managers(group_id, session=None):
         .all()
 
     return managers
+
+
+def get_group_manager_by_ids(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    group_manager = session.query(GroupManager) \
+        .filter(GroupManager.group_id == group_id,
+                GroupManager.person_id == person_id) \
+        .first()
+
+    return group_manager
 
 
 def add_person(new_person, session=None):
@@ -276,7 +325,47 @@ def add_group_manager(group_id, person, session=None):
     return group_manager
 
 
-def add_group_member(group_id, person, session=None):
+def add_group_manager_history(group_manager, session=None):
+    """
+    Creates and saves a new history record to the database.
+
+    :param group_manager: group manager to make history record from
+    :param session: database session
+
+    """
+    if session is None:
+        session = baseDao.get_session()
+
+    h = GroupManagerHistory()
+    h.manager_id = group_manager.manager_id
+    h.group_id = group_manager.group_id
+    h.person_id = group_manager.person_id
+    h.from_ts = group_manager.from_ts
+    h.to_ts = datetime.now()
+
+    session.add(h)
+    session.commit()
+
+    return h
+
+
+def remove_group_manager(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    group_manager = get_group_manager_by_ids(group_id, person_id, session)
+
+    if group_manager is not None:
+        add_group_manager_history(group_manager, session)
+
+        items_deleted = session.query(GroupManager).filter(GroupManager.group_id == group_id,
+                                                           GroupManager.person_id == person_id).delete()
+        return items_deleted > 0
+
+    return False
+
+
+def add_group_membership(group_id, person, session=None):
     if session is None:
         session = baseDao.get_session()
 
@@ -291,3 +380,43 @@ def add_group_member(group_id, person, session=None):
     session.commit()
 
     return group_membership
+
+
+def add_membership_history(membership, session=None):
+    """
+    Creates and saves a new history record to the database.
+
+    :param membership: membership to make history record from
+    :param session: database session
+
+    """
+    if session is None:
+        session = baseDao.get_session()
+
+    h = MembershipHistory()
+    h.membership_id = membership.membership_id
+    h.group_id = membership.group_id
+    h.person_id = membership.person_id
+    h.from_ts = membership.from_ts
+    h.to_ts = datetime.now()
+
+    session.add(h)
+    session.commit()
+
+    return h
+
+
+def remove_group_membership(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    membership = get_membership_by_ids(group_id, person_id, session)
+
+    if membership is not None:
+        add_membership_history(membership, session)
+
+        items_deleted = session.query(Membership).filter(Membership.group_id == group_id,
+                                                         Membership.person_id == person_id).delete()
+        return items_deleted > 0
+
+    return False
