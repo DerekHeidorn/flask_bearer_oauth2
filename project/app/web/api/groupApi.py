@@ -219,7 +219,7 @@ def _get_external_user_info(user_uuid, bearer_token):
         return None
 
     # api-endpoint
-    url = user_api_url + "/public/user/details/" + user_uuid
+    url = user_api_url + "/public/user/profile/" + user_uuid
 
     core.logger.debug("bearer_token=" + str(bearer_token))
     core.logger.debug("user_uuid=" + str(user_uuid))
@@ -251,7 +251,7 @@ def _get_external_user_info_list(user_uuid_list, bearer_token):
         return None
 
     # api-endpoint
-    url = user_api_url + "/public/user/details"
+    url = user_api_url + "/public/user/profiles"
 
     core.logger.debug("bearer_token=" + str(bearer_token))
     core.logger.debug("user_uuid_list=" + str(user_uuid_list))
