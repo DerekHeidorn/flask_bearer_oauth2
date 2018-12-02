@@ -1,7 +1,7 @@
 
 from datetime import datetime
-from project.app.models.batch import BatchJob
-from project.app.persist import groupDao, batchDao
+from app.models.batch import BatchJob
+from app.persist import groupDao, batchDao
 
 
 def run_stats():

@@ -6,12 +6,12 @@ from flask import Blueprint
 from flask import abort
 from authlib.flask.oauth2 import current_token
 
-from project.app.services import groupService
-from project.app.services.utils import sha256
-from project.app.web.utils import serializeUtils
-from project.app.web import oauth2
-from project.app import core
-from project.app.web.schemas.groupSchemas import GroupSchema, MembershipSchema
+from app.services import groupService
+from app.services.utils import sha256
+from app.web.utils import serializeUtils
+from app.web import oauth2
+from app import core
+from app.web.schemas.groupSchemas import GroupSchema, MembershipSchema
 
 
 api = Blueprint('group_api', __name__)

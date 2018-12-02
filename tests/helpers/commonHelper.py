@@ -1,7 +1,7 @@
 import os
-from project.app.services import groupService
-from project.tests.utils import randomUtil, authUtils
-from project.app import core
+from app.services import groupService
+from tests.utils import randomUtil, authUtils
+from app import core
 
 
 DEFAULT_PUBLIC_UUID = "c95802ac-e465-11e8-9f32-f2801f1b9fd1"  # Joe.Customer@foo.com.invali

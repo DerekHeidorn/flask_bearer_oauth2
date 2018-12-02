@@ -1,7 +1,7 @@
 
 import smtplib
 
-from project.app.services import commonService
+from app.services import commonService
 
 
 def _get_smtp_info():

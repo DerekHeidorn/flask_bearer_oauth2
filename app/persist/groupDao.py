@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy import func, and_
 
-from project.app.models.group import Group, Person, Membership, GroupManager, MembershipHistory, GroupManagerHistory
-from project.app.persist import baseDao
+from app.models.group import Group, Person, Membership, GroupManager, MembershipHistory, GroupManagerHistory
+from app.persist import baseDao
 
 
 def add_group(new_group, session=None):

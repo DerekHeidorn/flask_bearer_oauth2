@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from project.app.models.group import Group, Person
-from project.app.persist import groupDao, baseDao
-from project.app import core
+from app.models.group import Group, Person
+from app.persist import groupDao, baseDao
+from app import core
 
 
 class GroupDetail:

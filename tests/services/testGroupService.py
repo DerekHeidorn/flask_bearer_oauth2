@@ -1,7 +1,7 @@
 
-from project.tests.services.baseTest import BaseTest
-from project.tests.helpers import commonHelper
-from project.app.services import groupService
+from tests.services.baseTest import BaseTest
+from tests.helpers import commonHelper
+from app.services import groupService
 
 
 class GroupServiceTestCase(BaseTest):

@@ -11,11 +11,11 @@ from marshmallow import ValidationError
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 
-from project.app.persist import infrastructure
-from project.app.services import commonService, schedulerService
-from project.app.web import oauth2
-from project.app.web import errorHandlerAdvice
-from project.app.web.api import commonApi, groupApi, codetablesApi
+from app.persist import infrastructure
+from app.services import commonService, schedulerService
+from app.web import oauth2
+from app.web import errorHandlerAdvice
+from app.web.api import commonApi, groupApi, codetablesApi
 
 
 global_config = {}
@@ -106,16 +106,8 @@ def create_application():
          origins=["http://127.0.0.1:4200", "http://localhost:4200",
                   "http://127.0.0.1:9000", "http://127.0.0.1:9001", "http://127.0.0.1:9002"],
          max_age=1800)
-    # CORS(app, resources=r"/api/*")
-    # CORS(app)
+
     oauth2.init(app)
-
-    # app_settings = os.getenv(
-    #    'APP_SETTINGS',
-    #    'project.server.config.DevelopmentConfig'
-    # )
-    # app.config.from_object(app_settings)
-
     commonService.load_application_cache_from_db()
 
     # scheduler initialization

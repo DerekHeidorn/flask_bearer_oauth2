@@ -1,6 +1,7 @@
 import jwt
-from project.app.services import commonService
-from project.app import core
+from app.services import commonService
+from app import core
+
 
 def decode_auth_token(auth_token):
     """

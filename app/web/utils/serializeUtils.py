@@ -1,4 +1,4 @@
-from project.app.web.schemas.groupSchemas import GroupSchema, PersonSchema
+from app.web.schemas.groupSchemas import GroupSchema, PersonSchema
 
 
 def generate_response_wrapper(data,

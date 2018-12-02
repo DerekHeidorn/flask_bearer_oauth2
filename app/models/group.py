@@ -2,7 +2,7 @@
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 
-from project.app.models.baseModel import BaseModel
+from app.models.baseModel import BaseModel
 
 
 # CREATE TABLE general.TB_PERSON (

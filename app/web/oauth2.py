@@ -3,7 +3,7 @@ from authlib.flask.oauth2 import AuthorizationServer, ResourceProtector
 
 from authlib.specs.rfc6749 import TokenMixin
 from authlib.specs.rfc6750 import BearerTokenValidator
-from project.app.web.utils import authUtils
+from app.web.utils import authUtils
 
 
 class _OAuth2TokenMixin(TokenMixin):

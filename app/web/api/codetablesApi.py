@@ -4,9 +4,9 @@ from flask import jsonify
 from flask import abort
 from cacheout import Cache
 
-from project.app.models.codetables.group import CtGroupTypes
-from project.app.services import codetablesService
-from project.app.web.schemas.generalSchemas import CodeTableSchema
+from app.models.codetables.group import CtGroupTypes
+from app.services import codetablesService
+from app.web.schemas.generalSchemas import CodeTableSchema
 
 api = Blueprint('codetables_api', __name__)
 
