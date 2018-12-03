@@ -8,7 +8,7 @@ from authlib.flask.oauth2 import current_token
 
 from app.services import groupService
 from app.services.utils import sha256
-from app.web.utils import serializeUtils
+from app.web.utils import serializeUtils, apiUtils
 from app.web import oauth2
 from app import core
 from app.web.schemas.groupSchemas import GroupSchema, MembershipSchema
@@ -29,7 +29,7 @@ def get_my_public_groups():
         for g in groups:
             group_list.append(GroupSchema().dump(g))
 
-        resp = serializeUtils.generate_response_wrapper(group_list)
+        resp = apiUtils.generate_response_wrapper(group_list)
         return jsonify(resp)
     abort(403)
 
@@ -47,7 +47,8 @@ def subscribe_to_group(group_uuid, group_digest):
             group_membership = groupService.add_group_membership(group_uuid, user_uuid)
             data = MembershipSchema().dump(group_membership)
 
-            resp = serializeUtils.generate_response_wrapper(data)
+            resp = apiUtils.generate_response_wrapper(data)
+            resp = apiUtils.add_global_success_msg(resp, "You have been added to the group")
             return jsonify(resp), 201
         else:
             abort(403)
@@ -68,7 +69,8 @@ def unsubscribe_to_group(group_uuid, group_digest):
             group_membership = groupService.remove_group_membership(group_uuid, user_uuid)
             data = MembershipSchema().dump(group_membership)
 
-            resp = serializeUtils.generate_response_wrapper(data)
+            resp = apiUtils.generate_response_wrapper(data)
+            resp = apiUtils.add_global_success_msg(resp, "You have been removed from the group")
             return jsonify(resp), 201
         else:
             abort(403)
@@ -84,7 +86,7 @@ def get_public_groups():
     for g in groups:
         group_list.append(GroupSchema().dump(g))
 
-    resp = serializeUtils.generate_response_wrapper(group_list)
+    resp = apiUtils.generate_response_wrapper(group_list)
     return jsonify(resp)
 
 
@@ -96,7 +98,7 @@ def get_groups():
     for g in groups:
         group_list.append(GroupSchema().dump(g))
 
-    resp = serializeUtils.generate_response_wrapper(group_list)
+    resp = apiUtils.generate_response_wrapper(group_list)
     return jsonify(resp)
 
 
@@ -106,7 +108,7 @@ def get_public_group_by_uuid(group_uuid):
     group = groupService.get_group_by_uuid(group_uuid, False)
     if group:
         data = GroupSchema().dump(group)
-        resp = serializeUtils.generate_response_wrapper(data)
+        resp = apiUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
         #
@@ -135,7 +137,7 @@ def get_public_membership_detail_by_uuid(group_uuid, member_uuid):
         else:
             data = serializeUtils.serialize_membership(membership)
 
-        resp = serializeUtils.generate_response_wrapper(data)
+        resp = apiUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
         #
@@ -164,7 +166,7 @@ def get_public_manager_detail_by_uuid(group_uuid, manager_uuid):
         else:
             data = serializeUtils.serialize_manager(group_manager)
 
-        resp = serializeUtils.generate_response_wrapper(data)
+        resp = apiUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
         #
@@ -200,7 +202,7 @@ def get_public_group_detail_by_uuid(group_uuid):
         else:
             data = serializeUtils.serialize_group_detail(group_details)
 
-        resp = serializeUtils.generate_response_wrapper(data)
+        resp = apiUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
         #
@@ -284,7 +286,7 @@ def get_group_by_uuid(group_uuid):
     current_group = groupService.get_group_by_uuid(group_uuid)
     if current_group:
         data = GroupSchema().dump(current_group)
-        resp = serializeUtils.generate_response_wrapper(data)
+        resp = apiUtils.generate_response_wrapper(data)
         return jsonify(resp)
     else:
         #
@@ -303,5 +305,6 @@ def add_public_group():
     new_group = groupService.add_group(group_name, group_de)
 
     data = GroupSchema().dump(new_group)
-    resp = serializeUtils.generate_response_wrapper(data)
+    resp = apiUtils.generate_response_wrapper(data)
+    resp = apiUtils.add_global_success_msg(resp, "New group has been added")
     return jsonify(resp), 201
