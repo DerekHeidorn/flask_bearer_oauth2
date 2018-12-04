@@ -81,13 +81,32 @@ def unsubscribe_to_group(group_uuid, group_digest):
 @api.route('/api/v1.0/public/group', methods=['GET'])
 @oauth2.require_oauth('GRP_ACCESS')
 def get_public_groups():
-    groups = groupService.get_public_groups()
-    group_list = []
-    for g in groups:
-        group_list.append(GroupSchema().dump(g))
 
-    resp = apiUtils.generate_response_wrapper(group_list)
-    return jsonify(resp)
+    if current_token is not None and current_token.user_uuid is not None:
+        user_uuid = current_token.user_uuid
+
+        group_info = groupService.get_public_groups(user_uuid)
+        groups = group_info['groups']
+        subscribed_groups = group_info['subscribed']
+
+        # core.logger.debug("subscribed_groups=" + str(subscribed_groups))
+
+        group_list = []
+        for g in groups:
+            d = GroupSchema().dump(g)
+            d['subscribed'] = False
+            for s in subscribed_groups:
+                if g.group_id == s.group_id:
+                    d['subscribed'] = True
+                    break
+
+            group_list.append(d)
+            # core.logger.debug("d=" + str(d))
+
+        resp = apiUtils.generate_response_wrapper(group_list)
+        return jsonify(resp)
+    else:
+        abort(403)
 
 
 @api.route('/api/v1.0/admin/group', methods=['GET'])

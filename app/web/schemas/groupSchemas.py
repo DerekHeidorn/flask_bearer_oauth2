@@ -9,6 +9,8 @@ class GroupSchema(Schema):
 
     group_uuid_digest = fields.Method('get_digest')
 
+    subscribed = False
+
     def get_digest(self, obj):
         if obj.group_uuid is not None:
             return sha256.hexdigest(str(obj.group_uuid))

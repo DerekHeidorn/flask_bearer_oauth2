@@ -44,8 +44,13 @@ def update_group(group_id, group_to_be_updated):
     return groupDao.update_group(group_id, group_to_be_updated)
 
 
-def get_public_groups():
-    return groupDao.get_groups_by_filter(False)
+def get_public_groups(user_uuid):
+    session = baseDao.get_session()
+
+    public_groups = groupDao.get_groups_by_filter(False, session)
+    subscribed_groups = groupDao.get_groups_by_user_uuid(user_uuid, session)
+
+    return {"groups": public_groups, "subscribed": subscribed_groups}
 
 
 def get_groups():
