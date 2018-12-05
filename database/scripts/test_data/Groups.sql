@@ -246,3 +246,61 @@ INSERT INTO public.tb_membership(
 	membership_id, group_id, person_id, membership_from_ts)
 	VALUES (52, 5, 52, CURRENT_DATE-2);
 	
+-- ========================================================================================================
+INSERT INTO public.tb_group(
+            group_id, group_uuid, grptyp_cd, group_name, group_de, group_private_fl)
+    VALUES (6, '5491f5fd-c9ef-4f0e-9137-183c91d98b38', 'FI', 'Legion of Doom', 'The Legion of Doom is a group of supervillains ', TRUE);
+
+-- 14468f27-44e8-4fc3-8cc6-3a48c80fd5aa', 'Joe.Subscribed@foo.com.invali
+INSERT INTO public.tb_group_manager(
+	manager_id, group_id, person_id, manager_from_ts)
+	VALUES (51, 6, 51, CURRENT_DATE-2);
+-- 21ce38c2-5456-40ac-a880-2b8477684a15 - Legion of Doom - Lex_Luthor
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (60, '21ce38c2-5456-40ac-a880-2b8477684a15');
+INSERT INTO public.tb_group_manager(
+	manager_id, group_id, person_id, manager_from_ts)
+	VALUES (60, 6, 60, CURRENT_DATE-2);
+-- 53e491f9-96b3-495f-8fd6-a6d0aa54e0fc - Legion of Doom - Brainiac
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (61, '53e491f9-96b3-495f-8fd6-a6d0aa54e0fc');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts)
+	VALUES (61, 6, 61, CURRENT_DATE-2);
+-- 0785e9e4-c80e-4f70-9c73-51fd1c63a142 - Legion of Doom - Bizarro
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (62, '0785e9e4-c80e-4f70-9c73-51fd1c63a142');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts)
+	VALUES (62, 6, 62, CURRENT_DATE-2);
+-- 71dfe7fc-7279-46d9-a1ff-b6227d69aa73 - Legion of Doom - Captain_Cold
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (63, '71dfe7fc-7279-46d9-a1ff-b6227d69aa73');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts)
+	VALUES (63, 6, 63, CURRENT_DATE-2);
+-- 157b3c6c-c56f-467b-8311-2202a066c531 - Legion of Doom - Gorilla_Grodd
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (64, '157b3c6c-c56f-467b-8311-2202a066c531');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts)
+	VALUES (64, 6, 64, CURRENT_DATE-2);
+-- 1ed78d12-82c0-4eb6-bde8-b8413f9406f3 - Legion of Doom - Riddler
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (65, '1ed78d12-82c0-4eb6-bde8-b8413f9406f3');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts)
+	VALUES (65, 6, 65, CURRENT_DATE-2);
+-- 5d7d2422-17e2-4613-9a5a-645675a4999a - Legion of Doom - Scarecrow
+INSERT INTO public.tb_person(
+	person_id, user_uuid)
+	VALUES (66, '5d7d2422-17e2-4613-9a5a-645675a4999a');
+INSERT INTO public.tb_membership(
+	membership_id, group_id, person_id, membership_from_ts)
+	VALUES (66, 6, 66, CURRENT_DATE-2);
