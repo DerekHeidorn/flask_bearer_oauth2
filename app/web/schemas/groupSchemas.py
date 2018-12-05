@@ -9,7 +9,7 @@ class GroupSchema(Schema):
 
     group_uuid_digest = fields.Method('get_digest')
 
-    subscribed = False
+    subscribed = fields.Boolean()
 
     def get_digest(self, obj):
         if obj.group_uuid is not None:

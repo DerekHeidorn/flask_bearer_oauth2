@@ -198,7 +198,11 @@ def get_public_manager_detail_by_uuid(group_uuid, manager_uuid):
 @api.route('/api/v1.0/public/group/detail/<group_uuid>', methods=['GET'])
 @oauth2.require_oauth('GRP_ACCESS')
 def get_public_group_detail_by_uuid(group_uuid):
-    group_details = groupService.get_group_detail_by_uuid(group_uuid, False)
+    user_uuid = None
+    if current_token is not None and current_token.user_uuid is not None:
+        user_uuid = current_token.user_uuid
+
+    group_details = groupService.get_group_detail_by_uuid(group_uuid, False, user_uuid)
     core.logger.debug("group_details=" + str(group_details))
 
     if group_details:
@@ -210,7 +214,7 @@ def get_public_group_detail_by_uuid(group_uuid):
         for m in group_details.active_managers:
             user_uuid_list.append(str(m.person.user_uuid))
 
-            core.logger.debug("user_uuid_list=" + str(user_uuid_list))
+            # core.logger.debug("user_uuid_list=" + str(user_uuid_list))
 
         # print("current_token(type)=" + str(type(current_token)))
         bearer_token = request.headers['Authorization']
@@ -242,8 +246,8 @@ def _get_external_user_info(user_uuid, bearer_token):
     # api-endpoint
     url = user_api_url + "/public/user/profile/" + user_uuid
 
-    core.logger.debug("bearer_token=" + str(bearer_token))
-    core.logger.debug("user_uuid=" + str(user_uuid))
+    # core.logger.debug("bearer_token=" + str(bearer_token))
+    # core.logger.debug("user_uuid=" + str(user_uuid))
 
     # sending get request and saving the response as response object
     headers = {"Authorization": bearer_token, "Content-Type": "application/json"}
@@ -251,15 +255,15 @@ def _get_external_user_info(user_uuid, bearer_token):
 
     if resp.status_code == 200:
 
-        core.logger.debug("resp=" + str(resp))
+        # core.logger.debug("resp=" + str(resp))
 
         # extracting data in json format
         user_data = resp.json()
-        core.logger.debug("user_data=" + str(user_data))
+        # core.logger.debug("user_data=" + str(user_data))
 
         return user_data['data']
     else:
-        core.logger.debug("resp.status_code=" + str(resp.status_code))
+        # core.logger.debug("resp.status_code=" + str(resp.status_code))
         return None
 
 
@@ -274,12 +278,12 @@ def _get_external_user_info_list(user_uuid_list, bearer_token):
     # api-endpoint
     url = user_api_url + "/public/user/profiles"
 
-    core.logger.debug("bearer_token=" + str(bearer_token))
-    core.logger.debug("user_uuid_list=" + str(user_uuid_list))
+    # core.logger.debug("bearer_token=" + str(bearer_token))
+    # core.logger.debug("user_uuid_list=" + str(user_uuid_list))
 
     json_string = json.dumps(user_uuid_list)
 
-    core.logger.debug("json=" + str(json_string))
+    # core.logger.debug("json=" + str(json_string))
 
     # sending get request and saving the response as response object
     headers = {"Authorization": bearer_token, "Content-Type": "application/json"}
@@ -287,15 +291,15 @@ def _get_external_user_info_list(user_uuid_list, bearer_token):
 
     if resp.status_code == 200:
 
-        core.logger.debug("resp=" + str(resp))
+        # core.logger.debug("resp=" + str(resp))
 
         # extracting data in json format
         user_data = resp.json()
-        core.logger.debug("user_data=" + str(user_data))
+        # core.logger.debug("user_data=" + str(user_data))
 
         return user_data['data']
     else:
-        core.logger.debug("resp.status_code=" + str(resp.status_code))
+        # core.logger.debug("resp.status_code=" + str(resp.status_code))
         return None
 
 

@@ -9,19 +9,34 @@ class GroupDetail:
     group = None
     active_members = []
     active_managers = []
+    subscribed = False
 
     def __repr__(self):
         return "<GroupDetail(group='%s', active_members='%s', active_managers='%s')>" \
                % (self.group, self.active_members, self.active_managers)
 
 
-def get_group_detail_by_uuid(group_uuid, is_private_fl=None):
+def get_group_detail_by_uuid(group_uuid, is_private_fl=None, user_uuid=None):
     session = baseDao.get_session()
     group_detail = GroupDetail()
     group = groupDao.get_group_by_uuid(group_uuid, is_private_fl, session)
     group_detail.group = group
     group_detail.active_members = groupDao.get_active_group_members(group.group_id, session)
     group_detail.active_managers = groupDao.get_active_group_managers(group.group_id, session)
+
+    if user_uuid is not None:
+        person = groupDao.get_person_by_uuid(user_uuid, session)
+        core.logger.debug("person=" + str(person))
+        if person is not None:
+            is_active_member = groupDao.is_active_group_member(group.group_id, person.person_id, session)
+            core.logger.debug("is_active_member=" + str(is_active_member))
+            if is_active_member:
+                group_detail.group.subscribed = True
+            else:
+                is_active_manager = groupDao.is_active_group_manager(group.group_id, person.person_id, session)
+                core.logger.debug("is_active_manager=" + str(is_active_manager))
+                if is_active_manager:
+                    group_detail.group.subscribed = True
 
     return group_detail
 

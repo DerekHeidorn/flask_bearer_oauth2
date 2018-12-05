@@ -256,6 +256,17 @@ def get_active_group_members(group_id, session=None):
     return members
 
 
+def is_active_group_member(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    member = session.query(Membership)\
+        .filter(Membership.group_id == group_id, Membership.person_id == person_id)\
+        .first()
+
+    return member is not None
+
+
 def get_membership_by_ids(group_id, person_id, session=None):
     if session is None:
         session = baseDao.get_session()
@@ -266,6 +277,17 @@ def get_membership_by_ids(group_id, person_id, session=None):
         .first()
 
     return membership
+
+
+def is_active_group_manager(group_id, person_id, session=None):
+    if session is None:
+        session = baseDao.get_session()
+
+    manager = session.query(GroupManager)\
+        .filter(GroupManager.group_id == group_id, GroupManager.person_id == person_id)\
+        .first()
+
+    return manager is not None
 
 
 def get_active_group_managers(group_id, session=None):

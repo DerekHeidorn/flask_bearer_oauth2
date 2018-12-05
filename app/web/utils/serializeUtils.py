@@ -35,7 +35,7 @@ def serialize_group_detail(group_details, user_info=None):
         user = None
         if user_info:
             for u in user_info:
-                print("u=" + str(u))
+                # print("u=" + str(u))
                 if u['user_uuid'] == str(m.person.user_uuid):
                     user = u
                     break
