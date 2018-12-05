@@ -34,6 +34,46 @@ def get_my_public_groups():
     abort(403)
 
 
+@api.route('/api/v1.0/my/groups/detail', methods=['GET'])
+@oauth2.require_oauth('GRP_ACCESS')
+def get_my_public_groups_details():
+    if current_token is not None and current_token.user_uuid is not None:
+        user_uuid = current_token.user_uuid
+
+        groups = groupService.get_groups_by_user_uuid(user_uuid)
+
+        groups_details_list = list()
+
+        for g in groups:
+            group_details = groupService.get_group_detail_by_uuid(g.group_uuid, None, user_uuid)
+
+            user_uuid_list = []
+
+            for m in group_details.active_members:
+                user_uuid_list.append(str(m.person.user_uuid))
+
+            for m in group_details.active_managers:
+                user_uuid_list.append(str(m.person.user_uuid))
+
+                # core.logger.debug("user_uuid_list=" + str(user_uuid_list))
+
+            # print("current_token(type)=" + str(type(current_token)))
+            bearer_token = request.headers['Authorization']
+
+            if current_token is not None:
+                user_data = _get_external_user_info_list(user_uuid_list, bearer_token)
+                groups_details_list.append(serializeUtils.serialize_group_detail(group_details,
+                                                                                 user_info=user_data))
+            else:
+                groups_details_list.append(serializeUtils.serialize_group_detail(group_details))
+
+        resp = apiUtils.generate_response_wrapper(groups_details_list)
+        return jsonify(resp)
+    else:
+        abort(403)
+
+
+
 @api.route('/api/v1.0/my/subscribe/group/<group_uuid>/<group_digest>', methods=['post'])
 @oauth2.require_oauth('GRP_ACCESS')
 def subscribe_to_group(group_uuid, group_digest):
@@ -202,7 +242,7 @@ def get_public_group_detail_by_uuid(group_uuid):
     if current_token is not None and current_token.user_uuid is not None:
         user_uuid = current_token.user_uuid
 
-    group_details = groupService.get_group_detail_by_uuid(group_uuid, False, user_uuid)
+    group_details = groupService.get_group_detail_by_uuid(group_uuid, None, user_uuid)
     core.logger.debug("group_details=" + str(group_details))
 
     if group_details:
