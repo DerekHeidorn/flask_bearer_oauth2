@@ -63,7 +63,7 @@ def run_coverage():
     code_coverage.start()
 
     """Runs the unit tests with coverage."""
-    tests = unittest.TestLoader().discover('project/tests/web', pattern='test*.py')
+    tests = unittest.TestLoader().discover('tests/web', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         code_coverage.stop()

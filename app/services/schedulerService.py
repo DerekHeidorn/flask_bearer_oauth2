@@ -1,13 +1,14 @@
 
 from datetime import datetime
 from app.models.batch import BatchJob
-from app.persist import groupDao, batchDao
+from app.persist import groupDao, batchDao, baseDao
 
 
 def run_stats():
+    session = baseDao.get_session()
     start_ts = datetime.now()
 
-    user_count = groupDao.get_group_count()
+    user_count = groupDao.get_group_count(session)
     print("stats: group_count=" + str(user_count))
 
     end_ts = datetime.now()
@@ -19,7 +20,7 @@ def run_stats():
     batch_job.status_code = 'COMPLETED'
     batch_job.end_ts = end_ts
 
-    batchDao.add_batch_job(batch_job)
+    batchDao.add_batch_job(session, batch_job)
 
 
 
