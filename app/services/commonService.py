@@ -6,7 +6,6 @@ _application_config_cache = Cache(maxsize=200, ttl=5 * 60)
 
 
 def get_config_by_key(key):
-    session = baseDao.get_session()
     value = _application_config_cache.get(key)
     return value
 
