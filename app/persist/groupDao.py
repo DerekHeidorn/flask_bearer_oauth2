@@ -364,7 +364,7 @@ def add_membership_history(session, membership):
 
 def remove_group_membership(session, group_id, person_id):
 
-    membership = get_membership_by_ids(group_id, person_id, session)
+    membership = get_membership_by_ids(session, group_id, person_id)
 
     if membership is not None:
         add_membership_history(session, membership)
